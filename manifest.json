@@ -1,0 +1,16 @@
+{
+  "short_name": "Amalmon Portfolio",
+  "name": "Amalmon K H - Data Analyst Portfolio",
+  "description": "Professional portfolio of AMALMON K H, a BCA student and aspiring Data Analyst specializing in Microsoft Excel, Power BI, SQL, MySQL, Tableau, DAX, and Business Intelligence.",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": ".",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "display": "standalone"
+}

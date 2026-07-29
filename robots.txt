@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kh247-u.github.io/netflix-presentation/sitemap.xml

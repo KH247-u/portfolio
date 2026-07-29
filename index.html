@@ -152,6 +152,12 @@
 </head>
 
 <body>
+    <!-- Interactive Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Custom Cursor Glow -->
+    <div class="cursor-glow" id="cursor-glow"></div>
+
     <!-- Scroll Progress Indicator -->
     <div id="scroll-progress-container">
         <div id="scroll-progress-bar" style="transform: scaleX(0);"></div>
@@ -178,14 +184,11 @@
 
         <!-- Hero Section -->
         <section class="section-hero" id="hero" aria-label="Introduction Hero Section">
-            <!-- Animated Background Glows -->
-            <div class="hero-glow-1" aria-hidden="true"></div>
-            <div class="hero-glow-2" aria-hidden="true"></div>
-
             <div class="hero-content">
                 <p class="hero-tagline" id="hero-tagline-text">Data Analytics &amp; Business Intelligence</p>
-                <h1 class="hero-name" id="hero-name-title">AMALMON K H</h1>
-                <h2 class="hero-title" id="hero-subtitle">BCA Student &amp; Aspiring Data Analyst</h2>
+                <h1 class="hero-name" id="hero-name-title"><span class="reveal-name">AMALMON</span> <span class="reveal-name" style="white-space: nowrap;">K H</span></h1>
+                <h2 class="hero-title" id="hero-subtitle">BCA Student | Data Analytics Enthusiast</h2>
+                <p class="hero-lead">Driven by a passion for business intelligence, quantitative analytics, and solving complex real-world problems through data-driven insights.</p>
 
                 <div class="hero-meta" id="hero-contact-meta">
                     <span class="meta-item" id="meta-location">
@@ -216,12 +219,8 @@
 
                 <div class="hero-actions" id="hero-actions-container">
                     <a href="#projects" class="btn btn-primary" id="btn-view-projects" aria-label="Scroll down to view my projects">View Projects</a>
-                    <button class="btn btn-secondary" id="btn-hero-print" aria-label="Download and Print Resume as PDF">
-                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" />
-                        </svg>
-                        Download PDF Resume
-                    </button>
+                    <a href="#certifications" class="btn btn-secondary" id="btn-view-certs" aria-label="Scroll down to view my certifications">View Certifications</a>
+                    <a href="#contact" class="btn btn-secondary" id="btn-contact-me" aria-label="Scroll down to contact me">Contact Me</a>
                 </div>
             </div>
         </section>
@@ -294,7 +293,7 @@
                         </li>
                     </ul>
                     <div class="timeline-actions">
-                        <a href="certificates/SIDA_VWCCJAN26_Click here to download your Internship Certificate - 8 Weeks.pdf" 
+                        <a href="certificates/Data%20Analytics%20and%20Visualisaton%20Internship%20Certificate%20-%208%20Weeks.pdf" 
                            target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" 
                            aria-label="View IPSR Solutions Internship Certificate PDF (opens in new tab)">
                             View Internship Certificate (PDF)
@@ -352,6 +351,12 @@
 
                 <!-- Project 1 -->
                 <article class="project-card" id="project-netflix">
+                    <div class="project-image-container">
+                        <img class="project-img" src="assets/netflix-dashboard.png" alt="Netflix Data Analytics Dashboard Preview" loading="lazy">
+                        <div class="project-overlay">
+                            <span class="project-overlay-btn">Interactive Showcase</span>
+                        </div>
+                    </div>
                     <div class="project-header">
                         <h3 class="project-name" id="project-netflix-title">Netflix Data Analytics Dashboard</h3>
                         <div class="project-tools">
@@ -377,6 +382,12 @@
 
                 <!-- Project 2 -->
                 <article class="project-card" id="project-restaurant">
+                    <div class="project-image-container">
+                        <img class="project-img" src="assets/restaurant-dashboard.png" alt="Restaurant Sales Analysis Dashboard Preview" loading="lazy">
+                        <div class="project-overlay">
+                            <span class="project-overlay-btn">Interactive Showcase</span>
+                        </div>
+                    </div>
                     <div class="project-header">
                         <h3 class="project-name" id="project-restaurant-title">Restaurant Sales Analysis Dashboard</h3>
                         <div class="project-tools">
@@ -433,50 +444,136 @@
         <!-- Certifications Section -->
         <section class="section-card scroll-reveal" id="certifications" aria-label="Professional Development Certifications">
             <h2 class="section-title">Certifications</h2>
-            <p class="cert-intro text-muted">A showcase of ongoing professional development and industry qualifications. Click any card to view the official verification document.</p>
+            <p class="cert-intro text-muted">A curated showcase of verified qualifications, internships, and professional development. Click any card to verify.</p>
 
             <div class="certifications-grid" id="certs-container">
-                <article class="cert-card" id="cert-powerbi">
+                
+                <!-- Cert 1 (Featured) -->
+                <article class="cert-card featured" id="cert-data-analytics-internship">
+                    <div class="cert-glow-overlay"></div>
                     <div class="cert-badge">
                         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 15l-4-4 1.41-1.41L10 13.17l5.59-5.59L17 9l-7 7z" />
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
                         </svg>
                     </div>
-                    <h3 class="cert-title">Power BI Data Analyst Certification</h3>
-                    <p class="cert-issuer">Microsoft Partner Training</p>
-                    <a href="certificates/AMALMON KH-Certificate.pdf" target="_blank" rel="noopener noreferrer" 
-                       class="cert-status verified" aria-label="View Power BI Data Analyst certificate PDF (opens in new tab)">
-                        View Verified PDF
+                    <span class="cert-badge-tag">Featured Internship</span>
+                    <h3 class="cert-title">Data Analytics &amp; Visualisation Internship</h3>
+                    <p class="cert-issuer">IPSR Solutions Limited</p>
+                    <div class="cert-meta">
+                        <span class="cert-date">Duration: 8 Weeks (240 Hours)</span>
+                        <span class="cert-id">ID: OYzknoNyUH</span>
+                    </div>
+                    <a href="certificates/Data%20Analytics%20and%20Visualisaton%20Internship%20Certificate%20-%208%20Weeks.pdf" target="_blank" rel="noopener noreferrer" 
+                       class="cert-status verified" aria-label="View Data Analytics &amp; Visualisation certificate PDF (opens in new tab)">
+                        View Professional Certificate
                     </a>
                 </article>
 
-                <article class="cert-card" id="cert-sql">
+                <!-- Cert 2 (Featured) -->
+                <article class="cert-card featured" id="cert-cloud-computing-internship">
+                    <div class="cert-glow-overlay"></div>
                     <div class="cert-badge">
                         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 15l-4-4 1.41-1.41L10 13.17l5.59-5.59L17 9l-7 7z" />
+                            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" />
                         </svg>
                     </div>
-                    <h3 class="cert-title">SQL Database Queries &amp; Admin</h3>
-                    <p class="cert-issuer">MySQL Core Training</p>
-                    <a href="certificates/d1a58aa0-b2a1-4b1e-b79e-c4058e8039a3.pdf" target="_blank" rel="noopener noreferrer" 
-                       class="cert-status verified" aria-label="View MySQL Database Queries certificate PDF (opens in new tab)">
-                        View Verified PDF
+                    <span class="cert-badge-tag">Featured Internship</span>
+                    <h3 class="cert-title">Cloud Computing Internship</h3>
+                    <p class="cert-issuer">Alpha Innovation</p>
+                    <div class="cert-meta">
+                        <span class="cert-date">September 05, 2025 &ndash; November 5, 2025</span>
+                        <span class="cert-id">ID: DUfSn5Is</span>
+                    </div>
+                    <a href="certificates/Cloud%20Computing%20Certificate.pdf" target="_blank" rel="noopener noreferrer" 
+                       class="cert-status verified" aria-label="View Cloud Computing certificate PDF (opens in new tab)">
+                        View Internship Certificate
                     </a>
                 </article>
 
-                <article class="cert-card" id="cert-excel">
+                <!-- Cert 3 (Database and SQL) -->
+                <article class="cert-card" id="cert-db-sql">
+                    <div class="cert-glow-overlay"></div>
                     <div class="cert-badge">
                         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 15l-4-4 1.41-1.41L10 13.17l5.59-5.59L17 9l-7 7z" />
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
                         </svg>
                     </div>
-                    <h3 class="cert-title">Excel for Business Intelligence &amp; Analytics</h3>
-                    <p class="cert-issuer">Corporate Competency Training</p>
-                    <a href="certificates/Completion Certificate.pdf" target="_blank" rel="noopener noreferrer" 
-                       class="cert-status verified" aria-label="View Excel Business Intelligence certificate PDF (opens in new tab)">
-                        View Verified PDF
+                    <span class="cert-badge-tag">SQL &amp; Database</span>
+                    <h3 class="cert-title">Database and SQL Certificate</h3>
+                    <p class="cert-issuer">Infosys Springboard</p>
+                    <div class="cert-meta">
+                        <span class="cert-date">Completed: July 4, 2026</span>
+                        <span class="cert-id">Verified via QR Code / VC</span>
+                    </div>
+                    <a href="certificates/Database%20and%20SQL%20certificate.pdf" target="_blank" rel="noopener noreferrer" 
+                       class="cert-status verified" aria-label="View Database and SQL certificate PDF (opens in new tab)">
+                        View Course Completion
                     </a>
                 </article>
+
+                <!-- Cert 4 (Web Development) -->
+                <article class="cert-card" id="cert-web-bootcamp">
+                    <div class="cert-glow-overlay"></div>
+                    <div class="cert-badge">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z" />
+                        </svg>
+                    </div>
+                    <span class="cert-badge-tag">Web Development</span>
+                    <h3 class="cert-title">5-Day Web Development Bootcamp</h3>
+                    <p class="cert-issuer">&mu;Learn IDK / INOVUS LABS IEDC</p>
+                    <div class="cert-meta">
+                        <span class="cert-date">June 12-17, 2026</span>
+                        <span class="cert-id">ID: INO2026WEB526</span>
+                    </div>
+                    <a href="certificates/Web%20development%20Bootcamp.pdf" target="_blank" rel="noopener noreferrer" 
+                       class="cert-status verified" aria-label="View Web Development Bootcamp certificate PDF (opens in new tab)">
+                        View Bootcamp Certificate
+                    </a>
+                </article>
+
+                <!-- Cert 5 (OpenShift AI) -->
+                <article class="cert-card" id="cert-openshift-ai">
+                    <div class="cert-glow-overlay"></div>
+                    <div class="cert-badge">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.25z" />
+                        </svg>
+                    </div>
+                    <span class="cert-badge-tag">Cloud &amp; AI</span>
+                    <h3 class="cert-title">OpenShift AI for Future Careers</h3>
+                    <p class="cert-issuer">Red Hat / IPSR Solutions Limited</p>
+                    <div class="cert-meta">
+                        <span class="cert-date">Date: April 23, 2026</span>
+                        <span class="cert-id">ID: jaEQt6g1Jl</span>
+                    </div>
+                    <a href="certificates/OpenShift%20AI%20for%20Future%20Careers%20particiaption%20certificate.pdf" target="_blank" rel="noopener noreferrer" 
+                       class="cert-status verified" aria-label="View OpenShift AI webinar certificate PDF (opens in new tab)">
+                        View Webinar Certificate
+                    </a>
+                </article>
+
+                <!-- Cert 6 (YIP 8.0) -->
+                <article class="cert-card" id="cert-yip">
+                    <div class="cert-glow-overlay"></div>
+                    <div class="cert-badge">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 11.55C9.64 9.35 6.48 8 3 8v11c3.48 0 6.64 1.35 9 3.55 2.36-2.2 5.52-3.55 9-3.55V8c-3.48 0-6.64 1.35-9 3.55zM12 2c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z" />
+                        </svg>
+                    </div>
+                    <span class="cert-badge-tag">Innovation</span>
+                    <h3 class="cert-title">Young Innovators Programme (YIP) 8.0</h3>
+                    <p class="cert-issuer">K-DISC</p>
+                    <div class="cert-meta">
+                        <span class="cert-date">December 8, 2025</span>
+                        <span class="cert-id">Idea ID: 1159934</span>
+                    </div>
+                    <a href="certificates/YIP_Certificate_AMALMON%20KH_1159934.pdf" target="_blank" rel="noopener noreferrer" 
+                       class="cert-status verified" aria-label="View YIP 8.0 certificate PDF (opens in new tab)">
+                        View Recognition Certificate
+                    </a>
+                </article>
+
             </div>
         </section>
 

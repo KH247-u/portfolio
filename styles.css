@@ -62,19 +62,111 @@ button, input, select, textarea {
     cursor: none; /* Hide cursor on interactive items */
 }
 
-/* Custom Cursor Glow */
-.cursor-glow {
-    width: 350px;
-    height: 350px;
-    background: radial-gradient(circle, rgba(96, 165, 250, 0.08) 0%, rgba(34, 211, 238, 0.03) 45%, transparent 70%);
+/* Custom Cursor Elements */
+.cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--secondary);
     border-radius: 50%;
     position: fixed;
+    pointer-events: none;
+    z-index: 10000;
     transform: translate(-50%, -50%);
+    transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), 
+                width 0.15s ease, 
+                height 0.15s ease, 
+                background-color 0.15s ease;
+}
+
+.cursor-ring {
+    width: 40px;
+    height: 40px;
+    border: 1.5px solid var(--primary);
+    background-color: rgba(96, 165, 250, 0.03);
+    border-radius: 50%;
+    position: fixed;
     pointer-events: none;
     z-index: 9999;
-    mix-blend-mode: screen;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.15);
     opacity: 0;
-    transition: opacity 0.3s ease, transform 0.1s ease, width 0.3s ease, height 0.3s ease;
+    transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1),
+                width 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+                height 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.3s ease, 
+                border-color 0.3s ease, 
+                box-shadow 0.3s ease,
+                opacity 0.3s ease;
+}
+
+/* Hover Variations */
+.cursor-ring.hovering-btn {
+    width: 64px;
+    height: 64px;
+    background-color: rgba(34, 211, 238, 0.08);
+    border-color: var(--accent);
+    box-shadow: 0 0 25px rgba(34, 211, 238, 0.35);
+}
+
+.cursor-dot.hovering-btn {
+    background-color: var(--accent);
+    transform: translate(-50%, -50%) scale(1.4);
+}
+
+.cursor-ring.hovering-card {
+    width: 76px;
+    height: 76px;
+    background-color: transparent;
+    border-color: var(--accent);
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.25);
+}
+
+.cursor-dot.hovering-card {
+    background-color: var(--accent);
+}
+
+.cursor-ring.hovering-tag {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(96, 165, 250, 0.12);
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(96, 165, 250, 0.25);
+}
+
+.cursor-ring.hovering-cert {
+    width: 84px;
+    height: 84px;
+    background-color: rgba(34, 211, 238, 0.04);
+    border-color: var(--accent);
+    box-shadow: 0 0 35px rgba(34, 211, 238, 0.3);
+}
+
+.cursor-dot.hovering-cert {
+    background-color: var(--accent);
+}
+
+/* Click Ripple Indicator */
+.click-ripple {
+    position: fixed;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10001;
+    transform: translate(-50%, -50%);
+    animation: rippleEffect 0.45s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes rippleEffect {
+    0% {
+        width: 0px;
+        height: 0px;
+        opacity: 0.8;
+    }
+    100% {
+        width: 130px;
+        height: 130px;
+        opacity: 0;
+    }
 }
 
 /* Interactive canvas background style */
@@ -1045,7 +1137,7 @@ h1, h2, h3, h4, h5, h6 {
         cursor: default; /* Show default cursor on mobile devices */
     }
     
-    .cursor-glow {
+    .cursor-dot, .cursor-ring {
         display: none !important;
     }
 
@@ -1110,7 +1202,8 @@ h1, h2, h3, h4, h5, h6 {
     .cert-badge,
     #scroll-progress-container,
     #bg-canvas,
-    .cursor-glow,
+    .cursor-dot,
+    .cursor-ring,
     .project-image-container,
     .cert-glow-overlay,
     .timeline-actions {

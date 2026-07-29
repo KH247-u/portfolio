@@ -1,13 +1,23 @@
 /**
  * AMALMON K H - Interactive Portfolio Script
- * Dynamic Canvas background, custom glow cursor trail, 3D card tilt physics, 
- * scroll reveals, scroll progress indicators, and active link tracking.
+ * 
+ * Includes:
+ * 1. Double-element cursor (dot + ring) with linear interpolation trailing.
+ * 2. Click ripple generator.
+ * 3. Interactive background canvas grid with gravitational particle nodes
+ *    and spotlight lighting.
+ * 4. Magnetic button spring attraction.
+ * 5. Card 3D tilts and hover reflections.
+ * 6. Responsive fallbacks for touch-enabled devices.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Check user preference for motion
+    // Accessibility check: user motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    // Check if device supports touch to gracefully disable mouse cursor effects
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
     // --- Dynamic Canonical URL Generation ---
     const canonicalLink = document.getElementById('canonical-link');
@@ -16,11 +26,39 @@ document.addEventListener('DOMContentLoaded', () => {
         canonicalLink.setAttribute('href', cleanUrl);
     }
 
-    // --- Navigation PDF Export / Print Triggers ---
+    // --- PDF Resume Print Trigger ---
     const navPrintBtn = document.getElementById('btn-nav-print');
     if (navPrintBtn) {
         navPrintBtn.addEventListener('click', () => {
             window.print();
+        });
+    }
+
+    // Coordinates for global mouse position
+    let mouse = { x: -1000, y: -1000 };
+
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+
+    window.addEventListener('mouseleave', () => {
+        mouse.x = -1000;
+        mouse.y = -1000;
+    });
+
+    // --- Click Ripple Animation ---
+    if (!isTouchDevice && !prefersReducedMotion) {
+        window.addEventListener('click', (e) => {
+            const ripple = document.createElement('div');
+            ripple.className = 'click-ripple';
+            ripple.style.left = `${e.clientX}px`;
+            ripple.style.top = `${e.clientY}px`;
+            document.body.appendChild(ripple);
+
+            ripple.addEventListener('animationend', () => {
+                ripple.remove();
+            });
         });
     }
 
@@ -30,83 +68,99 @@ document.addEventListener('DOMContentLoaded', () => {
         const ctx = canvas.getContext('2d');
         let particles = [];
         let animationFrameId;
-        
-        // Mouse coordinates for canvas interaction
-        let canvasMouse = { x: -1000, y: -1000 };
-        window.addEventListener('mousemove', (e) => {
-            canvasMouse.x = e.clientX;
-            canvasMouse.y = e.clientY;
-        });
-        window.addEventListener('mouseleave', () => {
-            canvasMouse.x = -1000;
-            canvasMouse.y = -1000;
-        });
 
-        // Resize Canvas to fit screen
+        // Resize Canvas to fill viewport
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             initParticles();
         }
 
-        // Particle Class
+        // Particle Node Class
         class Particle {
             constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.4;
-                this.vy = (Math.random() - 0.5) * 0.4;
+                // Initial baseline home position
+                this.homeX = Math.random() * canvas.width;
+                this.homeY = Math.random() * canvas.height;
+                this.x = this.homeX;
+                this.y = this.homeY;
+                
+                // Slow idle speed and direction
+                this.vx = (Math.random() - 0.5) * 0.25;
+                this.vy = (Math.random() - 0.5) * 0.25;
                 this.radius = Math.random() * 2 + 1;
+                this.angle = Math.random() * Math.PI * 2;
+                this.brightness = 0.4;
             }
 
             update() {
-                this.x += this.vx;
-                this.y += this.vy;
+                // Subtle slow idle drift (moves home position slowly)
+                this.angle += 0.003;
+                this.homeX += Math.cos(this.angle) * 0.12;
+                this.homeY += Math.sin(this.angle) * 0.12;
 
-                // Bounce off boundaries
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                // Restrict home position inside canvas borders
+                if (this.homeX < 0 || this.homeX > canvas.width) this.homeX = Math.random() * canvas.width;
+                if (this.homeY < 0 || this.homeY > canvas.height) this.homeY = Math.random() * canvas.height;
 
-                // Mouse interaction - push particles away slightly
-                if (canvasMouse.x !== -1000) {
-                    const dx = this.x - canvasMouse.x;
-                    const dy = this.y - canvasMouse.y;
+                // Mouse interaction - check attraction distance
+                if (mouse.x !== -1000) {
+                    const dx = mouse.x - this.homeX;
+                    const dy = mouse.y - this.homeY;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    const forceRadius = 150;
-                    
-                    if (dist < forceRadius) {
-                        const force = (forceRadius - dist) / forceRadius;
-                        const directionX = dx / dist;
-                        const directionY = dy / dist;
-                        this.x += directionX * force * 1.5;
-                        this.y += directionY * force * 1.5;
+                    const attractionRadius = 180;
+
+                    if (dist < attractionRadius) {
+                        // Node gets pulled closer to the cursor
+                        const pullForce = (attractionRadius - dist) / attractionRadius;
+                        
+                        // Target position scales with distance to cursor
+                        const targetX = this.homeX + (mouse.x - this.homeX) * 0.18 * pullForce;
+                        const targetY = this.homeY + (mouse.y - this.homeY) * 0.18 * pullForce;
+                        
+                        // Eased interpolation toward target
+                        this.x += (targetX - this.x) * 0.12;
+                        this.y += (targetY - this.y) * 0.12;
+                        
+                        // Increase brightness
+                        this.brightness = 0.4 + 0.6 * pullForce;
+                    } else {
+                        // Smoothly ease back to home position
+                        this.x += (this.homeX - this.x) * 0.08;
+                        this.y += (this.homeY - this.y) * 0.08;
+                        this.brightness = 0.4;
                     }
+                } else {
+                    // Smoothly ease back to home position if mouse leaves screen
+                    this.x += (this.homeX - this.x) * 0.08;
+                    this.y += (this.homeY - this.y) * 0.08;
+                    this.brightness = 0.4;
                 }
             }
 
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(96, 165, 250, 0.45)';
+                ctx.fillStyle = `rgba(96, 165, 250, ${this.brightness})`;
                 ctx.fill();
             }
         }
 
-        // Initialize particles count based on screen size
+        // Initialize particles count based on screen width
         function initParticles() {
             particles = [];
-            const count = window.innerWidth < 768 ? 25 : 65;
+            const count = window.innerWidth < 768 ? 20 : 60;
             for (let i = 0; i < count; i++) {
                 particles.push(new Particle());
             }
         }
 
-        // Animation Loop
+        // Render Canvas
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw background grid lines (Linear/Blueprint effect)
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.015)';
+
+            // Draw Background Blueprint Grid
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.012)';
             ctx.lineWidth = 1;
             const gridSize = 80;
             for (let x = 0; x < canvas.width; x += gridSize) {
@@ -122,23 +176,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.stroke();
             }
 
-            // Update & Draw Particles
+            // Draw Spotlight/Lighting (Hero spotlight)
+            if (mouse.x !== -1000) {
+                let grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 240);
+                grad.addColorStop(0, 'rgba(96, 165, 250, 0.05)');
+                grad.addColorStop(0.5, 'rgba(34, 211, 238, 0.015)');
+                grad.addColorStop(1, 'transparent');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // Update & Draw Nodes
             for (let i = 0; i < particles.length; i++) {
                 particles[i].update();
                 particles[i].draw();
             }
 
-            // Connect close particles with neural lines
+            // Neural Connections: Draw line to cursor and lines between close nodes
             ctx.lineWidth = 0.8;
             for (let i = 0; i < particles.length; i++) {
+                // 1. Connection line to the cursor if within radius
+                if (mouse.x !== -1000) {
+                    const dxMouse = particles[i].x - mouse.x;
+                    const dyMouse = particles[i].y - mouse.y;
+                    const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+                    const attractionRadius = 180;
+
+                    if (distMouse < attractionRadius) {
+                        const lineOpacity = (1 - (distMouse / attractionRadius)) * 0.16;
+                        ctx.strokeStyle = `rgba(96, 165, 250, ${lineOpacity})`;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+
+                // 2. Connection lines between close nodes
                 for (let j = i + 1; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    const connectionDist = 130;
+                    const connectionDist = 120;
 
                     if (dist < connectionDist) {
-                        const opacity = (1 - (dist / connectionDist)) * 0.12;
+                        const opacity = (1 - (dist / connectionDist)) * 0.08;
                         ctx.strokeStyle = `rgba(34, 211, 238, ${opacity})`;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
@@ -156,73 +238,144 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     }
 
-    // --- Custom Cursor Glow Trail (Desktop Only) ---
-    const cursorGlow = document.getElementById('cursor-glow');
-    if (cursorGlow && !prefersReducedMotion && window.innerWidth > 768) {
+    // --- Custom Cursor Elements & Trails (Desktop/Mouse Only) ---
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorRing = document.getElementById('cursor-ring');
+
+    if (cursorDot && cursorRing && !isTouchDevice && !prefersReducedMotion) {
         let pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-        let current = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-        
+        let dotCoords = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        let ringCoords = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
         window.addEventListener('mousemove', (e) => {
             pointer.x = e.clientX;
             pointer.y = e.clientY;
-            cursorGlow.style.opacity = '1';
+            
+            cursorDot.style.opacity = '1';
+            cursorRing.style.opacity = '1';
         });
 
         window.addEventListener('mouseleave', () => {
-            cursorGlow.style.opacity = '0';
+            cursorDot.style.opacity = '0';
+            cursorRing.style.opacity = '0';
         });
 
-        // Smooth Linear Interpolation (lerp) loop for cursor trail
-        function updateCursor() {
-            current.x += (pointer.x - current.x) * 0.08;
-            current.y += (pointer.y - current.y) * 0.08;
-            
-            cursorGlow.style.left = `${current.x}px`;
-            cursorGlow.style.top = `${current.y}px`;
-            
-            requestAnimationFrame(updateCursor);
-        }
-        updateCursor();
+        // Loop calculating independent trailing interpolation
+        function updateCursorPositions() {
+            // Dot moves fast with minimal lag
+            dotCoords.x += (pointer.x - dotCoords.x) * 0.18;
+            dotCoords.y += (pointer.y - dotCoords.y) * 0.18;
 
-        // Custom Magnetic Scale Action for Links, Buttons, and Cards
-        const hoverables = document.querySelectorAll('a, button, .tag, .project-card, .cert-card');
-        hoverables.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                cursorGlow.style.width = '480px';
-                cursorGlow.style.height = '480px';
-                cursorGlow.style.background = 'radial-gradient(circle, rgba(96, 165, 250, 0.11) 0%, rgba(34, 211, 238, 0.04) 45%, transparent 70%)';
+            // Outer ring follows with more ease for floating lag/spring trail
+            ringCoords.x += (pointer.x - ringCoords.x) * 0.09;
+            ringCoords.y += (pointer.y - ringCoords.y) * 0.09;
+
+            cursorDot.style.left = `${dotCoords.x}px`;
+            cursorDot.style.top = `${dotCoords.y}px`;
+
+            cursorRing.style.left = `${ringCoords.x}px`;
+            cursorRing.style.top = `${ringCoords.y}px`;
+
+            requestAnimationFrame(updateCursorPositions);
+        }
+        updateCursorPositions();
+
+        // Bind interactive cursor hover transformations
+        
+        // 1. Buttons (Primary / Secondary / Navigation / Contact)
+        const buttons = document.querySelectorAll('a, button, .contact-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                cursorRing.classList.add('hovering-btn');
+                cursorDot.classList.add('hovering-btn');
             });
-            item.addEventListener('mouseleave', () => {
-                cursorGlow.style.width = '350px';
-                cursorGlow.style.height = '350px';
-                cursorGlow.style.background = 'radial-gradient(circle, rgba(96, 165, 250, 0.08) 0%, rgba(34, 211, 238, 0.03) 45%, transparent 70%)';
+            btn.addEventListener('mouseleave', () => {
+                cursorRing.classList.remove('hovering-btn');
+                cursorDot.classList.remove('hovering-btn');
+            });
+        });
+
+        // 2. Project Cards
+        const projectCards = document.querySelectorAll('.project-card');
+        projectCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                cursorRing.classList.add('hovering-card');
+                cursorDot.classList.add('hovering-card');
+            });
+            card.addEventListener('mouseleave', () => {
+                cursorRing.classList.remove('hovering-card');
+                cursorDot.classList.remove('hovering-card');
+            });
+        });
+
+        // 3. Skill Chips
+        const tags = document.querySelectorAll('.tag');
+        tags.forEach(tag => {
+            tag.addEventListener('mouseenter', () => {
+                cursorRing.classList.add('hovering-tag');
+            });
+            tag.addEventListener('mouseleave', () => {
+                cursorRing.classList.remove('hovering-tag');
+            });
+        });
+
+        // 4. Certificates
+        const certCards = document.querySelectorAll('.cert-card');
+        certCards.forEach(cert => {
+            cert.addEventListener('mouseenter', () => {
+                cursorRing.classList.add('hovering-cert');
+                cursorDot.classList.add('hovering-cert');
+            });
+            cert.addEventListener('mouseleave', () => {
+                cursorRing.classList.remove('hovering-cert');
+                cursorDot.classList.remove('hovering-cert');
             });
         });
     }
 
-    // --- 3D Tilt Interaction for Project and Certificate Cards ---
+    // --- Magnetic Hover Pull Action (Buttons only) ---
+    const magneticElements = document.querySelectorAll('.btn, .contact-btn, #btn-nav-print');
+    if (magneticElements.length > 0 && !isTouchDevice && !prefersReducedMotion) {
+        magneticElements.forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                // Mouse position relative to center of element
+                const relX = e.clientX - rect.left - rect.width / 2;
+                const relY = e.clientY - rect.top - rect.height / 2;
+                
+                // Pull element 22% towards mouse cursor
+                el.style.transform = `translate(${relX * 0.22}px, ${relY * 0.22}px) scale(1.02)`;
+            });
+
+            el.addEventListener('mouseleave', () => {
+                // Smooth spring back to resting state
+                el.style.transform = 'translate(0px, 0px) scale(1)';
+            });
+        });
+    }
+
+    // --- 3D Card Tilt & Spotlight Sweeps (Projects & Certificates) ---
     const tiltCards = document.querySelectorAll('.project-card, .cert-card');
-    if (tiltCards.length > 0 && !prefersReducedMotion && window.innerWidth > 768) {
+    if (tiltCards.length > 0 && !isTouchDevice && !prefersReducedMotion) {
         tiltCards.forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left; // mouse x within element
-                const y = e.clientY - rect.top;  // mouse y within element
-                
+                const x = e.clientX - rect.left; // mouse position x in card
+                const y = e.clientY - rect.top;  // mouse position y in card
                 const w = rect.width;
                 const h = rect.height;
-                
-                // Calculate rotation values based on offset from center
-                const rotateY = -((x - w/2) / w) * 12; 
-                const rotateX = ((y - h/2) / h) * 12;
-                
+
+                // Rotation calculation relative to card center
+                const rotateY = -((x - w/2) / w) * 10;
+                const rotateX = ((y - h/2) / h) * 10;
+
                 card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
-                
-                // Reflection sweep tracking if glow exists
+
+                // Track and render border/reflection reflection sweep
                 const glow = card.querySelector('.cert-glow-overlay');
                 if (glow) {
                     const percentX = (x / w) * 100;
-                    glow.style.background = `radial-gradient(circle at ${percentX}% ${y}px, rgba(255,255,255,0.06) 0%, transparent 60%)`;
+                    glow.style.background = `radial-gradient(circle at ${percentX}% ${y}px, rgba(34, 211, 238, 0.08) 0%, transparent 60%)`;
                     glow.style.opacity = '1';
                 }
             });
@@ -238,13 +391,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Dynamic Skill delay tags index inject ---
-    const skillChips = document.querySelectorAll('.tag');
-    skillChips.forEach((chip, index) => {
-        chip.style.setProperty('--i', index);
+    // --- Skills Stagger delay tag property injection ---
+    const tags = document.querySelectorAll('.tag');
+    tags.forEach((tag, index) => {
+        tag.style.setProperty('--i', index);
     });
 
-    // --- Scroll Navbar blur and shadow controls ---
+    // --- Scroll Navbar Blur & Shadow effect ---
     const navbar = document.getElementById('main-nav');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 30) {
@@ -270,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Active Navigation Link Tracking while Scrolling ---
+    // --- Scroll Active Navmenu Highlights ---
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('.nav-link');
 
@@ -299,9 +452,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.addEventListener('scroll', updateActiveNavLink);
-    updateActiveNavLink(); // Run check on load
+    updateActiveNavLink(); // Execute on initial load
 
-    // --- Intersection Observer for Content Reveal animations ---
+    // --- Scroll Content Reveal Observer ---
     const revealElements = document.querySelectorAll('.scroll-reveal');
     if (!prefersReducedMotion && 'IntersectionObserver' in window) {
         const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -318,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         revealElements.forEach(el => revealObserver.observe(el));
     } else {
-        // Fallback: instantly reveal sections if reduced motion is preferred or observer is not supported
+        // Fallback: immediately show elements if motion-free preference or observer is missing
         revealElements.forEach(el => el.classList.add('revealed'));
     }
 });

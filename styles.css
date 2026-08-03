@@ -429,6 +429,32 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto;
 }
 
+/* Hero Profile Image Styling */
+.hero-profile-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.hero-profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3.5px solid var(--primary);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.2), 
+                0 0 40px rgba(96, 165, 250, 0.1);
+    transition: transform var(--transition-speed) ease, border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.hero-profile-img:hover {
+    transform: scale(1.05);
+    border-color: var(--accent);
+    box-shadow: 0 0 25px rgba(34, 211, 238, 0.4), 
+                0 0 50px rgba(34, 211, 238, 0.2);
+}
+
+
 .hero-tagline {
     font-size: 0.9rem;
     font-weight: 700;
@@ -1206,7 +1232,8 @@ h1, h2, h3, h4, h5, h6 {
     .cursor-ring,
     .project-image-container,
     .cert-glow-overlay,
-    .timeline-actions {
+    .timeline-actions,
+    .hero-profile-container {
         display: none !important;
     }
 

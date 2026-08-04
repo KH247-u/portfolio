@@ -63,32 +63,47 @@ button, input, select, textarea {
 }
 
 /* Custom Cursor Elements */
+#cursor-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9998; /* Sits under the ring/dot but above content */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
 .cursor-dot {
     width: 8px;
     height: 8px;
-    background-color: var(--secondary);
+    background-color: #38bdf8; /* Neon blue core */
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
     z-index: 10000;
     transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.8),
+                0 0 20px rgba(56, 189, 248, 0.4);
     transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), 
                 width 0.15s ease, 
                 height 0.15s ease, 
-                background-color 0.15s ease;
+                background-color 0.15s ease,
+                box-shadow 0.15s ease;
 }
 
 .cursor-ring {
-    width: 40px;
-    height: 40px;
-    border: 1.5px solid var(--primary);
-    background-color: rgba(96, 165, 250, 0.03);
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid rgba(56, 189, 248, 0.4);
+    background-color: rgba(56, 189, 248, 0.02);
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 20px rgba(96, 165, 250, 0.15);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.12);
     opacity: 0;
     transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1),
                 width 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
@@ -101,48 +116,54 @@ button, input, select, textarea {
 
 /* Hover Variations */
 .cursor-ring.hovering-btn {
-    width: 64px;
-    height: 64px;
-    background-color: rgba(34, 211, 238, 0.08);
-    border-color: var(--accent);
-    box-shadow: 0 0 25px rgba(34, 211, 238, 0.35);
+    width: 56px;
+    height: 56px;
+    background-color: rgba(168, 85, 247, 0.04); /* Purple glow tint */
+    border-color: rgba(168, 85, 247, 0.8);
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
 }
 
 .cursor-dot.hovering-btn {
-    background-color: var(--accent);
-    transform: translate(-50%, -50%) scale(1.4);
+    background-color: #c084fc; /* Light purple neon */
+    transform: translate(-50%, -50%) scale(1.5);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.9), 
+                0 0 25px rgba(217, 70, 239, 0.6);
 }
 
 .cursor-ring.hovering-card {
-    width: 76px;
-    height: 76px;
-    background-color: transparent;
-    border-color: var(--accent);
-    box-shadow: 0 0 30px rgba(34, 211, 238, 0.25);
+    width: 68px;
+    height: 68px;
+    background-color: rgba(168, 85, 247, 0.02);
+    border-color: rgba(168, 85, 247, 0.6);
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.25);
 }
 
 .cursor-dot.hovering-card {
-    background-color: var(--accent);
+    background-color: #c084fc;
+    transform: translate(-50%, -50%) scale(1.2);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.8);
 }
 
 .cursor-ring.hovering-tag {
-    width: 48px;
-    height: 48px;
-    background-color: rgba(96, 165, 250, 0.12);
-    border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(96, 165, 250, 0.25);
+    width: 44px;
+    height: 44px;
+    background-color: rgba(56, 189, 248, 0.08);
+    border-color: rgba(56, 189, 248, 0.8);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
 }
 
 .cursor-ring.hovering-cert {
-    width: 84px;
-    height: 84px;
-    background-color: rgba(34, 211, 238, 0.04);
-    border-color: var(--accent);
-    box-shadow: 0 0 35px rgba(34, 211, 238, 0.3);
+    width: 76px;
+    height: 76px;
+    background-color: rgba(168, 85, 247, 0.03);
+    border-color: rgba(168, 85, 247, 0.7);
+    box-shadow: 0 0 35px rgba(168, 85, 247, 0.3);
 }
 
 .cursor-dot.hovering-cert {
-    background-color: var(--accent);
+    background-color: #c084fc;
+    transform: translate(-50%, -50%) scale(1.2);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.8);
 }
 
 /* Click Ripple Indicator */
@@ -1163,7 +1184,7 @@ h1, h2, h3, h4, h5, h6 {
         cursor: default; /* Show default cursor on mobile devices */
     }
     
-    .cursor-dot, .cursor-ring {
+    .cursor-dot, .cursor-ring, #cursor-canvas {
         display: none !important;
     }
 
@@ -1228,6 +1249,7 @@ h1, h2, h3, h4, h5, h6 {
     .cert-badge,
     #scroll-progress-container,
     #bg-canvas,
+    #cursor-canvas,
     .cursor-dot,
     .cursor-ring,
     .project-image-container,

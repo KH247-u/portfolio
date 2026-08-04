@@ -241,40 +241,150 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Custom Cursor Elements & Trails (Desktop/Mouse Only) ---
     const cursorDot = document.getElementById('cursor-dot');
     const cursorRing = document.getElementById('cursor-ring');
+    const cursorCanvas = document.getElementById('cursor-canvas');
 
-    if (cursorDot && cursorRing && !isTouchDevice && !prefersReducedMotion) {
+    const isDesktop = !isTouchDevice && window.innerWidth >= 768;
+
+    if (cursorDot && cursorRing && cursorCanvas && isDesktop && !prefersReducedMotion) {
+        const ctx = cursorCanvas.getContext('2d');
+        
         let pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
         let dotCoords = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
         let ringCoords = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        let cursorVisible = false;
+
+        // Trail point settings
+        const pointsCount = 20;
+        const points = [];
+        for (let i = 0; i < pointsCount; i++) {
+            points.push({ x: pointer.x, y: pointer.y });
+        }
+
+        // Setup High-DPI canvas
+        function resizeCanvas() {
+            const dpr = window.devicePixelRatio || 1;
+            cursorCanvas.width = window.innerWidth * dpr;
+            cursorCanvas.height = window.innerHeight * dpr;
+            ctx.scale(dpr, dpr);
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
         window.addEventListener('mousemove', (e) => {
+            const wasHidden = !cursorVisible;
             pointer.x = e.clientX;
             pointer.y = e.clientY;
+            cursorVisible = true;
             
+            if (wasHidden) {
+                // Instantly snap trail points to current position to avoid streaks from edge
+                for (let i = 0; i < pointsCount; i++) {
+                    points[i].x = pointer.x;
+                    points[i].y = pointer.y;
+                }
+                dotCoords.x = pointer.x;
+                dotCoords.y = pointer.y;
+                ringCoords.x = pointer.x;
+                ringCoords.y = pointer.y;
+            }
+
             cursorDot.style.opacity = '1';
             cursorRing.style.opacity = '1';
+            cursorCanvas.style.opacity = '1';
         });
 
         window.addEventListener('mouseleave', () => {
+            cursorVisible = false;
             cursorDot.style.opacity = '0';
             cursorRing.style.opacity = '0';
+            cursorCanvas.style.opacity = '0';
         });
 
         // Loop calculating independent trailing interpolation
         function updateCursorPositions() {
-            // Dot moves fast with minimal lag
-            dotCoords.x += (pointer.x - dotCoords.x) * 0.18;
-            dotCoords.y += (pointer.y - dotCoords.y) * 0.18;
+            // Skip execution if screen resized to mobile
+            if (window.innerWidth < 768) {
+                ctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+                requestAnimationFrame(updateCursorPositions);
+                return;
+            }
 
-            // Outer ring follows with more ease for floating lag/spring trail
-            ringCoords.x += (pointer.x - ringCoords.x) * 0.09;
-            ringCoords.y += (pointer.y - ringCoords.y) * 0.09;
+            // 1. Interpolate DOM Dot
+            dotCoords.x += (pointer.x - dotCoords.x) * 0.22;
+            dotCoords.y += (pointer.y - dotCoords.y) * 0.22;
+
+            // 2. Interpolate DOM Ring
+            ringCoords.x += (pointer.x - ringCoords.x) * 0.12;
+            ringCoords.y += (pointer.y - ringCoords.y) * 0.12;
 
             cursorDot.style.left = `${dotCoords.x}px`;
             cursorDot.style.top = `${dotCoords.y}px`;
 
             cursorRing.style.left = `${ringCoords.x}px`;
             cursorRing.style.top = `${ringCoords.y}px`;
+
+            // 3. Update canvas trail coordinates (spring/lerp follow)
+            if (cursorVisible) {
+                points[0].x = pointer.x;
+                points[0].y = pointer.y;
+            }
+            
+            for (let i = 1; i < pointsCount; i++) {
+                points[i].x += (points[i - 1].x - points[i].x) * 0.28;
+                points[i].y += (points[i - 1].y - points[i].y) * 0.28;
+            }
+
+            // 4. Render trailing ribbon on canvas
+            ctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+            
+            const isHovering = cursorDot.classList.contains('hovering-btn') || 
+                               cursorDot.classList.contains('hovering-card') || 
+                               cursorDot.classList.contains('hovering-cert');
+
+            ctx.globalCompositeOperation = 'screen';
+
+            // Draw tapered neon segments
+            for (let i = 0; i < pointsCount - 1; i++) {
+                const p1 = points[i];
+                const p2 = points[i + 1];
+                const ratio = i / (pointsCount - 1); // 0 at head, 1 at tail
+                
+                // If points collapsed, don't draw
+                const dx = p1.x - p2.x;
+                const dy = p1.y - p2.y;
+                if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) continue;
+
+                // Taper width and fade opacity
+                const glowWidth = (isHovering ? 18 : 10) * (1 - ratio);
+                const opacity = (1 - ratio) * 0.45;
+
+                // Interpolate color from neon blue (head) to neon purple (tail)
+                // Head (Blue): rgb(56, 189, 248) -> Tail (Purple): rgb(168, 85, 247)
+                const r = Math.round(56 + (168 - 56) * ratio);
+                const g = Math.round(189 + (85 - 189) * ratio);
+                const b = Math.round(248 + (247 - 248) * ratio);
+
+                // Draw broad outer glow path
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                
+                ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+                ctx.lineWidth = glowWidth;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+
+                // Draw thin inner white core
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+
+                const coreWidth = (isHovering ? 5 : 2.5) * (1 - ratio);
+                ctx.strokeStyle = `rgba(240, 249, 255, ${opacity * 1.5})`;
+                ctx.lineWidth = coreWidth;
+                ctx.stroke();
+            }
 
             requestAnimationFrame(updateCursorPositions);
         }

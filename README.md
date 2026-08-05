@@ -4,7 +4,7 @@ Welcome to my personal portfolio website! This portfolio showcases my journey as
 
 ## 🌐 Live Portfolio
 
-🔗 https://kh247-u.github.io/netflix-presentation/
+🔗 https://kh247-u.github.io/portfolio/
 
 ---
 

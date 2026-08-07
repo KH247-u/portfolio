@@ -1,5 +1,5 @@
 /**
- * AMALMON K H - Interactive Portfolio Script
+ * Amalmon KH - Interactive Portfolio Script
  * 
  * Includes:
  * 1. Double-element cursor (dot + ring) with linear interpolation trailing.

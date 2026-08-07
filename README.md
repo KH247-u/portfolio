@@ -1,4 +1,4 @@
-# 📊 AMALMON K H – Data Analyst Portfolio
+# 📊 Amalmon KH – Data Analyst Portfolio
 
 Welcome to my personal portfolio website! This portfolio showcases my journey as a **Data Analyst**, highlighting my projects, technical skills, certifications, internship experience, and achievements.
 
@@ -10,7 +10,7 @@ Welcome to my personal portfolio website! This portfolio showcases my journey as
 
 ## 👨‍💻 About Me
 
-I'm **AMALMON K H**, a Bachelor of Computer Applications (BCA) student passionate about Data Analytics, Business Intelligence, and Data Visualization.
+I'm **Amalmon KH**, a Bachelor of Computer Applications (BCA) student passionate about Data Analytics, Business Intelligence, and Data Visualization.
 
 My goal is to transform raw data into meaningful insights that help organizations make data-driven decisions.
 
@@ -162,4 +162,4 @@ This project is open-source and available under the MIT License.
 
 ---
 
-Made with ❤️ by **AMALMON K H**
+Made with ❤️ by **Amalmon KH**

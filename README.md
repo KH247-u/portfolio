@@ -143,7 +143,7 @@ IPSR Solutions Limited
 📧 Email: amalmonkh@gmail.com
 
 💼 LinkedIn:
-https://www.linkedin.com/in/Amalmon-KH
+https://www.linkedin.com/in/amalmon-kh/
 
 💻 GitHub:
 https://github.com/KH247-u

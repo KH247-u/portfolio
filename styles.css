@@ -715,6 +715,17 @@ h1, h2, h3, h4, h5, h6 {
     border-style: dashed;
 }
 
+.tag-cloud {
+    border-style: dotted;
+    border-color: rgba(34, 211, 238, 0.25);
+}
+
+.tag-cloud:hover {
+    border-color: var(--accent) !important;
+    background-color: rgba(34, 211, 238, 0.08) !important;
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.3) !important;
+}
+
 /* Projects Grid Styles - Vercel / Apple product grid style */
 .projects-grid {
     display: grid;
@@ -840,10 +851,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .project-bullets {
-    padding: 0 1.75rem 1.75rem 1.75rem;
-    margin-top: auto;
+    padding: 0 1.75rem 1.25rem 1.75rem;
+    margin-top: 0;
     font-size: 0.9rem;
     list-style-type: none;
+}
+
+.project-actions {
+    padding: 0 1.75rem 1.75rem 1.75rem;
+    margin-top: auto;
 }
 
 .project-bullets li {
@@ -1255,7 +1271,8 @@ h1, h2, h3, h4, h5, h6 {
     .project-image-container,
     .cert-glow-overlay,
     .timeline-actions,
-    .hero-profile-container {
+    .hero-profile-container,
+    .project-actions {
         display: none !important;
     }
 

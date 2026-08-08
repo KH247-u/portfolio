@@ -4,8 +4,13 @@
 
 ---
 
+## Career Objective
+Aspiring Data Analyst seeking to leverage 2+ months of hands-on experience in data cleaning, SQL optimization, and Power BI dashboard development. Proven ability to transform raw data into actionable business insights that drive operational efficiency and cost savings. Eager to contribute analytical expertise to support data-driven decision-making in a dynamic business environment.
+
+---
+
 ## Professional Summary
-Results-driven BCA student and aspiring Data Analyst with hands-on experience building interactive dashboards and querying databases to optimize business performance. Proven track record of turning raw datasets into actionable intelligence during internships at IPSR Solutions and Alpha Innovation, resulting in measurable efficiency gains and data-driven recommendations. Passionate about leveraging SQL, Power BI, and cloud fundamentals to solve complex business problems and drive organizational growth.
+Third-year BCA student with 2 months of professional data analytics experience at IPSR Solutions. Proven expertise in SQL optimization, Power BI dashboard development, and data transformation that generated $12K+ in identified cost savings. Cloud-savvy learner exploring AWS and scalable analytics architectures.
 
 ---
 

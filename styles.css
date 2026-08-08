@@ -1280,8 +1280,8 @@ h1, h2, h3, h4, h5, h6 {
     .portfolio-container {
         max-width: 100% !important;
         margin: 0 !important;
-        padding: 1.25cm 1.5cm !important;
-        gap: 1.5rem !important;
+        padding: 0.8cm 1.0cm !important;
+        gap: 1.0rem !important;
     }
 
     /* Remove decorative borders, card styling, and drop shadows */
@@ -1291,7 +1291,7 @@ h1, h2, h3, h4, h5, h6 {
         background: transparent !important;
         box-shadow: none !important;
         padding: 0 !important;
-        margin: 0 0 1.25rem 0 !important;
+        margin: 0 0 0.85rem 0 !important;
         border-radius: 0 !important;
     }
 
@@ -1301,13 +1301,13 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     .split-layout .section-card {
-        margin-bottom: 1.25rem !important;
+        margin-bottom: 0.85rem !important;
     }
 
     /* Hero section print transformation */
     .section-hero {
         text-align: left !important;
-        margin-bottom: 1.5rem !important;
+        margin-bottom: 1.0rem !important;
         border-bottom: 2px solid #000000 !important;
         padding-bottom: 0.5rem !important;
     }
@@ -1376,7 +1376,7 @@ h1, h2, h3, h4, h5, h6 {
 
     /* Timeline Items in print */
     .timeline-item {
-        margin-bottom: 1rem !important;
+        margin-bottom: 0.6rem !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
     }
@@ -1440,7 +1440,7 @@ h1, h2, h3, h4, h5, h6 {
     .skills-category {
         border-bottom: none !important;
         padding-bottom: 0 !important;
-        margin-bottom: 0.75rem !important;
+        margin-bottom: 0.4rem !important;
     }
 
     .skills-category-title {
@@ -1479,7 +1479,7 @@ h1, h2, h3, h4, h5, h6 {
     .project-card {
         border: none !important;
         padding: 0 !important;
-        margin-bottom: 1.25rem !important;
+        margin-bottom: 0.65rem !important;
         background: transparent !important;
         box-shadow: none !important;
         page-break-inside: avoid !important;
@@ -1558,7 +1558,7 @@ h1, h2, h3, h4, h5, h6 {
     .cert-card {
         border: none !important;
         padding: 0 !important;
-        margin-bottom: 0.5rem !important;
+        margin-bottom: 0.35rem !important;
         background: transparent !important;
         text-align: left !important;
         align-items: flex-start !important;
@@ -1588,7 +1588,8 @@ h1, h2, h3, h4, h5, h6 {
         content: " — " !important;
     }
 
-    .cert-status, .cert-meta, .cert-badge-tag {
+    .cert-status, .cert-meta, .cert-badge-tag, .cert-intro,
+    #cert-web-bootcamp, #cert-openshift-ai, #cert-yip {
         display: none !important;
     }
 

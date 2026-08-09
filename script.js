@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let lenis;
     if (!prefersReducedMotion && typeof Lenis !== 'undefined') {
         lenis = new Lenis({
-            duration: 1.2,
+            duration: 0.9,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
             smoothWheel: true,
             smoothTouch: false,
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const attractionRadius = 180;
 
                     if (distMouse < attractionRadius) {
-                        const lineOpacity = (1 - (distMouse / attractionRadius)) * 0.16;
+                        const lineOpacity = (1 - (distMouse / attractionRadius)) * 0.06;
                         ctx.strokeStyle = `rgba(96, 165, 250, ${lineOpacity})`;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const connectionDist = 120;
 
                     if (dist < connectionDist) {
-                        const opacity = (1 - (dist / connectionDist)) * 0.08;
+                        const opacity = (1 - (dist / connectionDist)) * 0.03;
                         ctx.strokeStyle = `rgba(34, 211, 238, ${opacity})`;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
@@ -252,65 +252,43 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     }
 
-    // --- Background Orbs Animation (Parallax & Mouse Follow) ---
+    // --- Background Orbs Animation (Parallax) ---
     const orb1 = document.getElementById('orb-1');
     const orb2 = document.getElementById('orb-2');
     
     if (orb1 && orb2 && !prefersReducedMotion && typeof gsap !== 'undefined') {
         // Slow random drifting for Orb 1
         gsap.to(orb1, {
-            x: 'random(-150, 150)',
-            y: 'random(-150, 150)',
-            duration: 12,
+            x: 'random(-100, 100)',
+            y: 'random(-100, 100)',
+            duration: 15,
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut"
         });
 
-        // Mouse follow lag for Orb 2 to create depth
-        window.addEventListener('mousemove', (e) => {
-            const xVal = e.clientX - window.innerWidth / 2;
-            const yVal = e.clientY - window.innerHeight / 2;
-            gsap.to(orb2, {
-                x: xVal * 0.4,
-                y: yVal * 0.4,
-                duration: 2.0,
-                ease: "power2.out"
-            });
+        // Slow random drifting for Orb 2
+        gsap.to(orb2, {
+            x: 'random(-100, 100)',
+            y: 'random(-100, 100)',
+            duration: 18,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
         });
     }
 
-    // --- Custom Cursor Elements & Trails (Desktop/Mouse Only) ---
+    // --- Custom Cursor Elements (Desktop/Mouse Only) ---
     const cursorDot = document.getElementById('cursor-dot');
     const cursorRing = document.getElementById('cursor-ring');
-    const cursorCanvas = document.getElementById('cursor-canvas');
 
     const isDesktop = !isTouchDevice && window.innerWidth >= 768;
 
-    if (cursorDot && cursorRing && cursorCanvas && isDesktop && !prefersReducedMotion) {
-        const ctx = cursorCanvas.getContext('2d');
-        
+    if (cursorDot && cursorRing && isDesktop && !prefersReducedMotion) {
         let pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
         let dotCoords = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
         let ringCoords = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
         let cursorVisible = false;
-
-        // Trail point settings
-        const pointsCount = 20;
-        const points = [];
-        for (let i = 0; i < pointsCount; i++) {
-            points.push({ x: pointer.x, y: pointer.y });
-        }
-
-        // Setup High-DPI canvas
-        function resizeCanvas() {
-            const dpr = window.devicePixelRatio || 1;
-            cursorCanvas.width = window.innerWidth * dpr;
-            cursorCanvas.height = window.innerHeight * dpr;
-            ctx.scale(dpr, dpr);
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
 
         window.addEventListener('mousemove', (e) => {
             const wasHidden = !cursorVisible;
@@ -319,11 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
             cursorVisible = true;
             
             if (wasHidden) {
-                // Instantly snap trail points to current position to avoid streaks from edge
-                for (let i = 0; i < pointsCount; i++) {
-                    points[i].x = pointer.x;
-                    points[i].y = pointer.y;
-                }
                 dotCoords.x = pointer.x;
                 dotCoords.y = pointer.y;
                 ringCoords.x = pointer.x;
@@ -332,21 +305,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             cursorDot.style.opacity = '1';
             cursorRing.style.opacity = '1';
-            cursorCanvas.style.opacity = '1';
         });
 
         window.addEventListener('mouseleave', () => {
             cursorVisible = false;
             cursorDot.style.opacity = '0';
             cursorRing.style.opacity = '0';
-            cursorCanvas.style.opacity = '0';
         });
 
-        // Loop calculating independent trailing interpolation
         function updateCursorPositions() {
-            // Skip execution if screen resized to mobile
             if (window.innerWidth < 768) {
-                ctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
                 requestAnimationFrame(updateCursorPositions);
                 return;
             }
@@ -365,76 +333,11 @@ document.addEventListener('DOMContentLoaded', () => {
             cursorRing.style.left = `${ringCoords.x}px`;
             cursorRing.style.top = `${ringCoords.y}px`;
 
-            // 3. Update canvas trail coordinates (spring/lerp follow)
-            if (cursorVisible) {
-                points[0].x = pointer.x;
-                points[0].y = pointer.y;
-            }
-            
-            for (let i = 1; i < pointsCount; i++) {
-                points[i].x += (points[i - 1].x - points[i].x) * 0.28;
-                points[i].y += (points[i - 1].y - points[i].y) * 0.28;
-            }
-
-            // 4. Render trailing ribbon on canvas
-            ctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
-            
-            const isHovering = cursorDot.classList.contains('hovering-btn') || 
-                               cursorDot.classList.contains('hovering-card') || 
-                               cursorDot.classList.contains('hovering-cert');
-
-            ctx.globalCompositeOperation = 'screen';
-
-            // Draw tapered neon segments
-            for (let i = 0; i < pointsCount - 1; i++) {
-                const p1 = points[i];
-                const p2 = points[i + 1];
-                const ratio = i / (pointsCount - 1); // 0 at head, 1 at tail
-                
-                // If points collapsed, don't draw
-                const dx = p1.x - p2.x;
-                const dy = p1.y - p2.y;
-                if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) continue;
-
-                // Taper width and fade opacity
-                const glowWidth = (isHovering ? 18 : 10) * (1 - ratio);
-                const opacity = (1 - ratio) * 0.45;
-
-                // Interpolate color from neon blue (head) to neon purple (tail)
-                // Head (Blue): rgb(56, 189, 248) -> Tail (Purple): rgb(168, 85, 247)
-                const r = Math.round(56 + (168 - 56) * ratio);
-                const g = Math.round(189 + (85 - 189) * ratio);
-                const b = Math.round(248 + (247 - 248) * ratio);
-
-                // Draw broad outer glow path
-                ctx.beginPath();
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
-                
-                ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-                ctx.lineWidth = glowWidth;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.stroke();
-
-                // Draw thin inner white core
-                ctx.beginPath();
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
-
-                const coreWidth = (isHovering ? 5 : 2.5) * (1 - ratio);
-                ctx.strokeStyle = `rgba(240, 249, 255, ${opacity * 1.5})`;
-                ctx.lineWidth = coreWidth;
-                ctx.stroke();
-            }
-
             requestAnimationFrame(updateCursorPositions);
         }
         updateCursorPositions();
 
         // Bind interactive cursor hover transformations
-        
-        // 1. Buttons (Primary / Secondary / Navigation / Contact)
         const buttons = document.querySelectorAll('a, button, .contact-btn');
         buttons.forEach(btn => {
             btn.addEventListener('mouseenter', () => {
@@ -447,7 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // 2. Project Cards
         const projectCards = document.querySelectorAll('.project-card');
         projectCards.forEach(card => {
             card.addEventListener('mouseenter', () => {
@@ -460,7 +362,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // 3. Skill Chips
         const tags = document.querySelectorAll('.tag');
         tags.forEach(tag => {
             tag.addEventListener('mouseenter', () => {
@@ -471,7 +372,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // 4. Certificates
         const certCards = document.querySelectorAll('.cert-card');
         certCards.forEach(cert => {
             cert.addEventListener('mouseenter', () => {
@@ -485,47 +385,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Magnetic Hover Pull Action (Buttons only) ---
-    const magneticElements = document.querySelectorAll('.btn, .contact-btn, #btn-nav-print');
-    if (magneticElements.length > 0 && !isTouchDevice && !prefersReducedMotion && typeof gsap !== 'undefined') {
-        magneticElements.forEach(el => {
-            el.addEventListener('mousemove', (e) => {
-                const rect = el.getBoundingClientRect();
-                const relX = e.clientX - rect.left - rect.width / 2;
-                const relY = e.clientY - rect.top - rect.height / 2;
-                
-                gsap.to(el, {
-                    x: relX * 0.35,
-                    y: relY * 0.35,
-                    scale: 1.04,
-                    duration: 0.3,
-                    ease: "power2.out"
-                });
-            });
-
-            el.addEventListener('mouseleave', () => {
-                gsap.to(el, {
-                    x: 0,
-                    y: 0,
-                    scale: 1,
-                    duration: 0.6,
-                    ease: "elastic.out(1.1, 0.4)"
-                });
-            });
-        });
-    }
-
-    // --- 3D Card Tilt & Spotlight Sweeps (Projects & Certificates) ---
+    // --- 3D Card Tilt (Projects & Certificates) ---
     const tiltCards = document.querySelectorAll('.project-card, .cert-card');
     if (tiltCards.length > 0 && !isTouchDevice && !prefersReducedMotion && typeof gsap !== 'undefined') {
         tiltCards.forEach(card => {
-            // Inject card-glow-overlay dynamically if not present
-            if (!card.querySelector('.card-glow-overlay')) {
-                const glow = document.createElement('div');
-                glow.className = 'card-glow-overlay';
-                card.appendChild(glow);
-            }
-
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left; // mouse position x in card
@@ -533,38 +396,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 const w = rect.width;
                 const h = rect.height;
 
-                // Rotation calculation relative to card center
-                const rotateY = -((x - w/2) / w) * 12;
-                const rotateX = ((y - h/2) / h) * 12;
+                // Subtle rotation relative to card center (max 3 degrees)
+                const rotateY = -((x - w/2) / w) * 3;
+                const rotateX = ((y - h/2) / h) * 3;
 
                 gsap.to(card, {
-                    transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`,
-                    duration: 0.3,
+                    transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`,
+                    duration: 0.5,
                     ease: "power2.out",
                     overwrite: "auto"
                 });
-
-                // Render dynamic radial backlighting spotlight
-                const glow = card.querySelector('.card-glow-overlay');
-                if (glow) {
-                    const percentX = (x / w) * 100;
-                    const percentY = (y / h) * 100;
-                    glow.style.background = `radial-gradient(circle at ${percentX}% ${percentY}%, rgba(96, 165, 250, 0.15) 0%, transparent 60%)`;
-                    glow.style.opacity = '1';
-                }
             });
 
             card.addEventListener('mouseleave', () => {
                 gsap.to(card, {
                     transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)',
-                    duration: 0.6,
-                    ease: "power3.out",
+                    duration: 0.5,
+                    ease: "power2.out",
                     overwrite: "auto"
                 });
-                const glow = card.querySelector('.card-glow-overlay');
-                if (glow) {
-                    glow.style.opacity = '0';
-                }
             });
         });
     }
@@ -641,7 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (targetId && targetId.startsWith('#')) {
                     e.preventDefault();
                     lenis.scrollTo(targetId, {
-                        duration: 1.2,
+                        duration: 0.9,
                         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
                     });
                 }
@@ -706,7 +556,7 @@ document.addEventListener('DOMContentLoaded', () => {
         revealElements.forEach((section) => {
             // Animate the section itself
             gsap.fromTo(section, 
-                { opacity: 0, y: 50 }, 
+                { opacity: 0, y: 25 }, 
                 {
                     opacity: 1,
                     y: 0,
@@ -726,12 +576,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const skillCategories = section.querySelectorAll('.skills-category');
             if (skillCategories.length > 0) {
                 gsap.fromTo(skillCategories,
-                    { opacity: 0, y: 30 },
+                    { opacity: 0, y: 15 },
                     {
                         opacity: 1,
                         y: 0,
                         duration: 0.8,
-                        stagger: 0.15,
+                        stagger: 0.06,
                         ease: "power2.out",
                         scrollTrigger: {
                             trigger: section.querySelector('.skills-grid') || section,
@@ -745,13 +595,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const projectCards = section.querySelectorAll('.project-card');
             if (projectCards.length > 0) {
                 gsap.fromTo(projectCards,
-                    { opacity: 0, y: 45, scale: 0.96 },
+                    { opacity: 0, y: 20 },
                     {
                         opacity: 1,
                         y: 0,
-                        scale: 1,
                         duration: 1.0,
-                        stagger: 0.2,
+                        stagger: 0.08,
                         ease: "power3.out",
                         scrollTrigger: {
                             trigger: section.querySelector('.projects-grid') || section,
@@ -765,13 +614,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const certCards = section.querySelectorAll('.cert-card');
             if (certCards.length > 0) {
                 gsap.fromTo(certCards,
-                    { opacity: 0, y: 45, scale: 0.96 },
+                    { opacity: 0, y: 20 },
                     {
                         opacity: 1,
                         y: 0,
-                        scale: 1,
                         duration: 1.0,
-                        stagger: 0.15,
+                        stagger: 0.06,
                         ease: "power3.out",
                         scrollTrigger: {
                             trigger: section.querySelector('.certifications-grid') || section,
@@ -785,12 +633,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const timelineItems = section.querySelectorAll('.timeline-item');
             if (timelineItems.length > 0) {
                 gsap.fromTo(timelineItems,
-                    { opacity: 0, x: -30 },
+                    { opacity: 0, x: -15 },
                     {
                         opacity: 1,
                         x: 0,
                         duration: 0.8,
-                        stagger: 0.2,
+                        stagger: 0.08,
                         ease: "power2.out",
                         scrollTrigger: {
                             trigger: section,
@@ -804,7 +652,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const title = section.querySelector('.section-title');
             if (title) {
                 gsap.fromTo(title,
-                    { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)", y: 15 },
+                    { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)", y: 8 },
                     {
                         clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
                         y: 0,

@@ -209,10 +209,10 @@ button, input, select, textarea {
     max-width: 800px;
     max-height: 800px;
     border-radius: 50%;
-    filter: blur(140px);
+    filter: blur(180px);
     pointer-events: none;
     z-index: -2;
-    opacity: 0.6;
+    opacity: 0.22;
     will-change: transform;
 }
 
@@ -990,18 +990,6 @@ h1, h2, h3, h4, h5, h6 {
     pointer-events: none;
 }
 
-/* Volumetric Backlighting Mouse Spotlight Overlay */
-.card-glow-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: 0;
-}
 
 .cert-card:hover .cert-glow-overlay {
     left: 200%;

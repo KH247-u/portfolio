@@ -1,6 +1,7 @@
 /**
- * AMALMON K H - Interactive Portfolio Script
- * Rebuilt from the ground up for a premium Editorial & Data-Visualization aesthetic.
+ * AMALMON K H - Cinematic Interactive Portfolio Script
+ * Rebuilt from the ground up to support profile photo highlights,
+ * magnetic cursors, spotlight layers, and single-page printable resume sheets.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -32,45 +33,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- PDF Resume Print Trigger ---
     const navPrintBtn = document.getElementById('btn-nav-print');
-    if (navPrintBtn) {
-        navPrintBtn.addEventListener('click', () => {
-            window.print();
-        });
-    }
+    const resumeDownloadBtn = document.getElementById('btn-download-resume');
+    
+    const triggerPrintAction = () => {
+        window.print();
+    };
 
-    // Global mouse coordinates (used for custom cursor, spotlight, and visualizations)
-    let mouse = { x: -1000, y: -1000 };
+    if (navPrintBtn) navPrintBtn.addEventListener('click', triggerPrintAction);
+    if (resumeDownloadBtn) resumeDownloadBtn.addEventListener('click', triggerPrintAction);
+
+    // Global mouse coordinates
     let screenMouse = { x: -1000, y: -1000 };
+    let isClicking = false;
 
     window.addEventListener('mousemove', (e) => {
         screenMouse.x = e.clientX;
         screenMouse.y = e.clientY;
     });
 
-    // Track mouse coordinates inside elements
-    const heroSection = document.getElementById('hero');
-    const heroCanvas = document.getElementById('hero-viz-canvas');
+    // Spawning Click Ripple Elements
+    window.addEventListener('mousedown', (e) => {
+        if (isTouchDevice || prefersReducedMotion) return;
+        
+        const ripple = document.createElement('div');
+        ripple.className = 'cursor-ripple';
+        ripple.style.left = `${e.clientX}px`;
+        ripple.style.top = `${e.clientY}px`;
+        document.body.appendChild(ripple);
 
-    if (heroSection) {
-        heroSection.addEventListener('mousemove', (e) => {
-            const rect = heroSection.getBoundingClientRect();
-            mouse.x = e.clientX - rect.left;
-            mouse.y = e.clientY - rect.top;
-        });
-        heroSection.addEventListener('mouseleave', () => {
-            mouse.x = -1000;
-            mouse.y = -1000;
-        });
-    }
+        setTimeout(() => {
+            ripple.remove();
+        }, 400);
+    });
 
     // --- Custom Minimal Cursor (Desktop/Mouse Only) ---
     const cursorDot = document.getElementById('cursor-dot');
     const cursorRing = document.getElementById('cursor-ring');
     const isDesktop = !isTouchDevice && window.innerWidth >= 768;
 
+    let targetRing = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let ringCoords = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let dotCoords = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
     if (cursorDot && cursorRing && isDesktop && !prefersReducedMotion) {
-        let dotCoords = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-        let ringCoords = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
         let cursorVisible = false;
 
         window.addEventListener('mousemove', (e) => {
@@ -100,11 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Interpolate custom coordinates
-            dotCoords.x += (screenMouse.x - dotCoords.x) * 0.22;
-            dotCoords.y += (screenMouse.y - dotCoords.y) * 0.22;
-            ringCoords.x += (screenMouse.x - ringCoords.x) * 0.12;
-            ringCoords.y += (screenMouse.y - ringCoords.y) * 0.12;
+            // Lerp tracking
+            dotCoords.x += (screenMouse.x - dotCoords.x) * 0.24;
+            dotCoords.y += (screenMouse.y - dotCoords.y) * 0.24;
+            ringCoords.x += (targetRing.x - ringCoords.x) * 0.14;
+            ringCoords.y += (targetRing.y - ringCoords.y) * 0.14;
 
             cursorDot.style.left = `${dotCoords.x}px`;
             cursorDot.style.top = `${dotCoords.y}px`;
@@ -115,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         updateCursorPositions();
 
-        // Bind hover classes
+        // Bind interactive cursor hover scaling
         const hoverElements = document.querySelectorAll('a, button, .skill-node, .cert-item-row');
         hoverElements.forEach(el => {
             el.addEventListener('mouseenter', () => {
@@ -125,142 +130,142 @@ document.addEventListener('DOMContentLoaded', () => {
             el.addEventListener('mouseleave', () => {
                 cursorRing.classList.remove('hovering');
                 cursorDot.classList.remove('hovering');
+                targetRing.x = screenMouse.x;
+                targetRing.y = screenMouse.y;
             });
         });
     }
 
-    // --- Interactive Abstract Data Field Hero Canvas ---
-    if (heroCanvas && !prefersReducedMotion) {
-        const ctx = heroCanvas.getContext('2d');
-        let width = 0, height = 0;
-        let points = [];
-        let time = 0;
+    // --- Hero Portrait Parallax, Spotlight, and Edge Lighting ---
+    const portraitFrame = document.getElementById('hero-portrait-frame');
+    const portraitImage = document.getElementById('hero-portrait-image');
+    const spotlightLayer = document.getElementById('portrait-spotlight-layer');
 
-        function resizeVizCanvas() {
-            width = heroCanvas.parentElement.clientWidth;
-            height = heroCanvas.parentElement.clientHeight;
-            heroCanvas.width = width;
-            heroCanvas.height = height;
+    if (portraitFrame && portraitImage && spotlightLayer && isDesktop && !prefersReducedMotion) {
+        portraitFrame.addEventListener('mousemove', (e) => {
+            const rect = portraitFrame.getBoundingClientRect();
+            const px = ((screenMouse.x - rect.left) / rect.width) * 100;
+            const py = ((screenMouse.y - rect.top) / rect.height) * 100;
+            
+            // Spotlight glow coordinates
+            spotlightLayer.style.setProperty('--x', `${px}%`);
+            spotlightLayer.style.setProperty('--y', `${py}%`);
+            spotlightLayer.style.opacity = '1';
 
-            // Generate stable coordinate points
-            points = [];
-            const count = 30;
-            for (let i = 0; i < count; i++) {
-                points.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * 0.2,
-                    vy: (Math.random() - 0.5) * 0.2,
-                    val: Math.floor(Math.random() * 100)
-                });
-            }
-        }
+            // Parallax displacements relative to center
+            const cx = screenMouse.x - (rect.left + rect.width / 2);
+            const cy = screenMouse.y - (rect.top + rect.height / 2);
 
-        function drawViz() {
-            ctx.clearRect(0, 0, width, height);
-            time += 0.005;
-
-            // 1. Grid Background
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.015)';
-            ctx.lineWidth = 1;
-            const gridSpacing = 40;
-            for (let x = 0; x < width; x += gridSpacing) {
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, height);
-                ctx.stroke();
-            }
-            for (let y = 0; y < height; y += gridSpacing) {
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(width, y);
-                ctx.stroke();
-            }
-
-            // 2. Sine Wave Data Curve (Subtle graph outline)
-            ctx.strokeStyle = 'rgba(91, 140, 255, 0.06)';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            for (let x = 0; x < width; x++) {
-                const sineVal = Math.sin(x * 0.01 + time) * 45 + Math.cos(x * 0.005 - time * 0.5) * 20;
-                const y = height / 2 + sineVal;
-                if (x === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-
-            // 3. Update & Draw Data Nodes
-            points.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-
-                // Restrict boundaries
-                if (p.x < 0 || p.x > width) p.vx *= -1;
-                if (p.y < 0 || p.y > height) p.vy *= -1;
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(167, 176, 188, 0.25)';
-                ctx.fill();
+            // Shift container slightly towards mouse, shift image opposite
+            gsap.to(portraitFrame, {
+                x: cx * 0.04,
+                y: cy * 0.04,
+                rotateY: cx * 0.015,
+                rotateX: -cy * 0.015,
+                borderColor: 'rgba(108, 140, 255, 0.4)',
+                boxShadow: '0 35px 70px -15px rgba(108, 140, 255, 0.15)',
+                duration: 0.4,
+                ease: "power2.out",
+                overwrite: "auto"
             });
 
-            // 4. Coordinates Spotlight / Tracker (on Mouseover)
-            const heroRect = heroCanvas.getBoundingClientRect();
-            const canvasMouseX = screenMouse.x - heroRect.left;
-            const canvasMouseY = screenMouse.y - heroRect.top;
+            gsap.to(portraitImage, {
+                x: -cx * 0.03,
+                y: -cy * 0.03,
+                scale: 1.05,
+                filter: 'contrast(1.08) brightness(0.96) saturate(1.02) sharp',
+                duration: 0.4,
+                ease: "power2.out",
+                overwrite: "auto"
+            });
 
-            if (canvasMouseX >= 0 && canvasMouseX <= width && canvasMouseY >= 0 && canvasMouseY <= height) {
-                // Crosshair coordinate lines
-                ctx.strokeStyle = 'rgba(53, 208, 186, 0.08)';
-                ctx.lineWidth = 0.8;
-                
-                ctx.beginPath();
-                ctx.moveTo(canvasMouseX, 0);
-                ctx.lineTo(canvasMouseX, height);
-                ctx.stroke();
+            // Expand cursor ring when hovering portrait
+            if (cursorRing) cursorRing.classList.add('hovering');
+        });
 
-                ctx.beginPath();
-                ctx.moveTo(0, canvasMouseY);
-                ctx.lineTo(width, canvasMouseY);
-                ctx.stroke();
+        portraitFrame.addEventListener('mouseleave', () => {
+            spotlightLayer.style.opacity = '0';
+            
+            gsap.to(portraitFrame, {
+                x: 0,
+                y: 0,
+                rotateY: 0,
+                rotateX: 0,
+                borderColor: 'rgba(255, 255, 255, 0.08)',
+                boxShadow: '0 30px 60px -20px rgba(0, 0, 0, 0.8)',
+                duration: 0.6,
+                ease: "power3.out",
+                overwrite: "auto"
+            });
 
-                // Faint connections to nearby nodes
-                ctx.strokeStyle = 'rgba(91, 140, 255, 0.15)';
-                points.forEach(p => {
-                    const dx = p.x - canvasMouseX;
-                    const dy = p.y - canvasMouseY;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 130) {
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(canvasMouseX, canvasMouseY);
-                        ctx.stroke();
+            gsap.to(portraitImage, {
+                x: 0,
+                y: 0,
+                scale: 1,
+                filter: 'contrast(1.04) brightness(0.92) saturate(0.96)',
+                duration: 0.6,
+                ease: "power3.out",
+                overwrite: "auto"
+            });
 
-                        // Coordinates callout values
-                        ctx.fillStyle = 'rgba(163, 230, 53, 0.4)';
-                        ctx.font = '7px Inter';
-                        ctx.fillText(`VAL:${p.val}`, p.x + 6, p.y - 4);
-                    }
+            if (cursorRing) cursorRing.classList.remove('hovering');
+        });
+    }
+
+    // --- Soft Magnetic Snap for Buttons & Link Coordinates Update ---
+    const magneticBtns = document.querySelectorAll('.btn, .btn-nav-print, #btn-download-resume');
+    if (magneticBtns.length > 0 && isDesktop && !prefersReducedMotion && typeof gsap !== 'undefined') {
+        magneticBtns.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const bx = rect.left + rect.width / 2;
+                const by = rect.top + rect.height / 2;
+                const dx = screenMouse.x - bx;
+                const dy = screenMouse.y - by;
+
+                // Move button slightly
+                gsap.to(btn, {
+                    x: dx * 0.22,
+                    y: dy * 0.22,
+                    duration: 0.3,
+                    ease: "power2.out",
+                    overwrite: "auto"
                 });
 
-                // Coordinate label boxes
-                ctx.fillStyle = '#070A0F';
-                ctx.fillRect(canvasMouseX + 10, canvasMouseY - 25, 90, 18);
-                ctx.strokeStyle = 'rgba(53, 208, 186, 0.25)';
-                ctx.strokeRect(canvasMouseX + 10, canvasMouseY - 25, 90, 18);
+                // Magnetically draw cursor ring coordinates
+                targetRing.x = bx + dx * 0.25;
+                targetRing.y = by + dy * 0.25;
+            });
 
-                ctx.fillStyle = 'rgba(53, 208, 186, 0.9)';
-                ctx.font = '8px monospace';
-                ctx.fillText(`LAT:${(canvasMouseX * 0.1).toFixed(1)} LON:${(canvasMouseY * 0.1).toFixed(1)}`, canvasMouseX + 15, canvasMouseY - 13);
-            }
-
-            requestAnimationFrame(drawViz);
-        }
-
-        window.addEventListener('resize', resizeVizCanvas);
-        resizeVizCanvas();
-        drawViz();
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, {
+                    x: 0,
+                    y: 0,
+                    duration: 0.5,
+                    ease: "power3.out",
+                    overwrite: "auto"
+                });
+                targetRing.x = screenMouse.x;
+                targetRing.y = screenMouse.y;
+            });
+        });
     }
+
+    // Fallback cursor ring coordinates update on normal page
+    window.addEventListener('mousemove', () => {
+        let isHoveringMagnetic = false;
+        magneticBtns.forEach(btn => {
+            const rect = btn.getBoundingClientRect();
+            if (screenMouse.x >= rect.left && screenMouse.x <= rect.right &&
+                screenMouse.y >= rect.top && screenMouse.y <= rect.bottom) {
+                isHoveringMagnetic = true;
+            }
+        });
+        if (!isHoveringMagnetic) {
+            targetRing.x = screenMouse.x;
+            targetRing.y = screenMouse.y;
+        }
+    });
 
     // --- Connecting Nodes Skills Map ---
     const skillsCanvas = document.getElementById('skills-canvas');
@@ -282,14 +287,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const hoverRect = hoverNode.getBoundingClientRect();
                 const containerRect = skillsCanvas.parentElement.getBoundingClientRect();
                 
-                // Get center coordinate of hovered node relative to canvas
                 const hx = hoverRect.left - containerRect.left + hoverRect.width / 2;
                 const hy = hoverRect.top - containerRect.top + hoverRect.height / 2;
 
                 const currentCategoryBlock = hoverNode.closest('.skills-cat-block');
                 const peers = currentCategoryBlock.querySelectorAll('.skill-node');
 
-                ctx.strokeStyle = 'rgba(53, 208, 186, 0.25)';
+                ctx.strokeStyle = 'rgba(57, 214, 197, 0.25)';
                 ctx.lineWidth = 1;
 
                 peers.forEach(peer => {
@@ -298,7 +302,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         const px = peerRect.left - containerRect.left + peerRect.width / 2;
                         const py = peerRect.top - containerRect.top + peerRect.height / 2;
 
-                        // Draw connection lines
                         ctx.beginPath();
                         ctx.moveTo(hx, hy);
                         ctx.lineTo(px, py);
@@ -310,15 +313,11 @@ document.addEventListener('DOMContentLoaded', () => {
             requestAnimationFrame(drawConnections);
         }
 
-        // Bind listeners
         skillNodes.forEach(node => {
             node.addEventListener('mouseenter', () => {
                 hoverNode = node;
-                
-                // Highlight current node
                 node.classList.add('highlighted');
 
-                // Dim non-peers and highlight peer nodes
                 const currentCategoryBlock = node.closest('.skills-cat-block');
                 skillNodes.forEach(otherNode => {
                     if (otherNode.closest('.skills-cat-block') !== currentCategoryBlock) {
@@ -411,7 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const certRows = document.querySelectorAll('.cert-item-row');
 
     if (previewCard && certRows.length > 0 && typeof gsap !== 'undefined') {
-        // Load initial badge icon
         previewBadge.innerHTML = certificatesData[0].iconHtml;
 
         certRows.forEach(row => {
@@ -419,11 +417,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const idx = parseInt(row.getAttribute('data-index'));
                 const data = certificatesData[idx];
 
-                // Remove active classes
                 certRows.forEach(r => r.classList.remove('active'));
                 row.classList.add('active');
 
-                // Animate card swap transition using GSAP
                 gsap.to(previewCard, {
                     opacity: 0,
                     y: 10,
@@ -446,6 +442,47 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     }
                 });
+            });
+        });
+    }
+
+    // --- Project Card subtle 3D Tilt ---
+    const projectCards = document.querySelectorAll('.project-case-study');
+    if (projectCards.length > 0 && isDesktop && !prefersReducedMotion && typeof gsap !== 'undefined') {
+        projectCards.forEach(card => {
+            const visual = card.querySelector('.project-visual');
+            
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = screenMouse.x - rect.left;
+                const y = screenMouse.y - rect.top;
+                const w = rect.width;
+                const h = rect.height;
+
+                const rotateY = -((x - w/2) / w) * 3.5;
+                const rotateX = ((y - h/2) / h) * 3.5;
+
+                if (visual) {
+                    gsap.to(visual, {
+                        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`,
+                        borderColor: 'rgba(108, 140, 255, 0.25)',
+                        duration: 0.4,
+                        ease: "power2.out",
+                        overwrite: "auto"
+                    });
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                if (visual) {
+                    gsap.to(visual, {
+                        transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)',
+                        borderColor: 'rgba(255, 255, 255, 0.08)',
+                        duration: 0.5,
+                        ease: "power3.out",
+                        overwrite: "auto"
+                    });
+                }
             });
         });
     }
@@ -479,9 +516,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.addEventListener('scroll', updateActiveNavLink);
-    updateActiveNavLink(); // Execute on initial load
+    updateActiveNavLink();
 
-    // Add scroll border class to header
     const navbar = document.getElementById('main-nav');
     if (navbar) {
         window.addEventListener('scroll', () => {
@@ -493,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Smooth Scroll on Nav Link Clicks via Lenis ---
+    // --- Smooth Scroll via Lenis ---
     if (typeof lenis !== 'undefined' && lenis && !prefersReducedMotion) {
         const navMenuLinks = document.querySelectorAll('.nav-link, .nav-logo, .hero-actions a');
         navMenuLinks.forEach(link => {
@@ -503,7 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     e.preventDefault();
                     lenis.scrollTo(targetId, {
                         duration: 0.9,
-                        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
+                        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
                     });
                 }
             });
@@ -524,23 +560,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Hero Section Load-In Timeline ---
+    // --- Cinematic Page Loader Timeline ---
     if (!prefersReducedMotion && typeof gsap !== 'undefined') {
         const introTl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
+        // Preset style transformations
+        gsap.set('#hero-portrait-frame', { opacity: 0, y: 35, scale: 0.95, filter: 'blur(10px)' });
         gsap.set('.hero-tagline', { opacity: 0, y: 15 });
         gsap.set('.hero-name', { opacity: 0, y: 25 });
         gsap.set('.hero-title', { opacity: 0, y: 15 });
         gsap.set('.hero-lead', { opacity: 0, y: 15 });
         gsap.set('.hero-actions .btn', { opacity: 0, y: 15 });
-        gsap.set('.hero-viz-col', { opacity: 0, scale: 0.96 });
 
-        introTl.to('.hero-tagline', { opacity: 1, y: 0, duration: 0.8 });
-        introTl.to('.hero-name', { opacity: 1, y: 0, duration: 1.0 }, "-=0.6");
+        // Sequence animations
+        introTl.to('#hero-portrait-frame', { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 1.4 });
+        introTl.to('.hero-tagline', { opacity: 1, y: 0, duration: 0.8 }, "-=1.0");
+        introTl.to('.hero-name', { opacity: 1, y: 0, duration: 1.0 }, "-=0.7");
         introTl.to('.hero-title', { opacity: 1, y: 0, duration: 0.8 }, "-=0.7");
         introTl.to('.hero-lead', { opacity: 1, y: 0, duration: 0.8 }, "-=0.6");
         introTl.to('.hero-actions .btn', { opacity: 1, y: 0, duration: 0.6, stagger: 0.08 }, "-=0.5");
-        introTl.to('.hero-viz-col', { opacity: 1, scale: 1, duration: 1.0, ease: "power3.out" }, "-=0.8");
     }
 
     // --- Scroll Content Reveal with GSAP ScrollTrigger ---
@@ -550,7 +588,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const revealElements = document.querySelectorAll('.scroll-reveal');
         
         revealElements.forEach((section) => {
-            // Animate section container
             gsap.fromTo(section, 
                 { opacity: 0, y: 25 }, 
                 {
@@ -566,7 +603,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             );
 
-            // Stagger animation rows
             const timelineRows = section.querySelectorAll('.timeline-row');
             if (timelineRows.length > 0) {
                 gsap.fromTo(timelineRows,
@@ -603,7 +639,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
             }
 
-            // Section titles clip-path slides
             const title = section.querySelector('.section-title');
             if (title) {
                 gsap.fromTo(title,
@@ -622,7 +657,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     } else {
-        // Fallback for user prefers reduced motion
         const revealElements = document.querySelectorAll('.scroll-reveal');
         revealElements.forEach(el => el.classList.add('revealed'));
     }

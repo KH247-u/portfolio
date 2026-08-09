@@ -35,7 +35,7 @@
     <!-- Web App Manifest & Branding -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <meta name="theme-color" content="#070A0F">
+    <meta name="theme-color" content="#06080D">
 
     <!-- Google Fonts Preconnect and Performance Optimization -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -164,7 +164,7 @@
         <div id="scroll-progress-bar"></div>
     </div>
 
-    <!-- Floating Minimal Navbar -->
+    <!-- Floating Minimalist Navbar -->
     <header class="navbar" id="main-nav">
         <div class="nav-container">
             <a href="#hero" class="nav-logo" id="nav-logo-link" aria-label="AMALMON K H Portfolio Home">AMALMON K H</a>
@@ -174,6 +174,7 @@
                 <a href="#skills" class="nav-link" id="link-skills" aria-label="Scroll to Skills section">Skills</a>
                 <a href="#projects" class="nav-link" id="link-projects" aria-label="Scroll to Projects section">Projects</a>
                 <a href="#certifications" class="nav-link" id="link-certifications" aria-label="Scroll to Certifications section">Certifications</a>
+                <a href="#resume" class="nav-link" id="link-resume" aria-label="Scroll to Resume section">Resume</a>
                 <a href="#contact" class="nav-link" id="link-contact" aria-label="Scroll to Contact section">Contact</a>
             </nav>
             <button class="btn-nav-print" id="btn-nav-print" aria-label="Export resume as PDF">Export PDF</button>
@@ -183,43 +184,50 @@
     <!-- Main Container -->
     <main class="portfolio-container" id="main-content">
 
-        <!-- Hero Section -->
-        <section class="section-hero scroll-reveal" id="hero" aria-label="Introduction Hero Section">
+        <!-- 01 — HERO SECTION -->
+        <section class="section-hero" id="hero" aria-label="Introduction Hero Section">
             <div class="hero-grid">
                 <div class="hero-text-col">
                     <p class="hero-tagline" id="hero-tagline-text">Data Analytics &amp; Business Intelligence</p>
                     <h1 class="hero-name" id="hero-name-title">AMALMON K H</h1>
-                    <h2 class="hero-title" id="hero-subtitle">BCA Student / Data Analytics Enthusiast</h2>
-                    <p class="hero-lead">"Turning data into meaningful business decisions."<br><br>I am a quantitative analyst intern and computer applications student driven by an interest in business intelligence, database optimization, and structured visualization. I focus on developing clean data pipelines and reporting mechanisms that track operational metrics, expose inefficiencies, and back strategic business optimization with quantitative proof.</p>
+                    <h2 class="hero-title" id="hero-subtitle">BCA Student &bull; Data Analytics Enthusiast</h2>
+                    <p class="hero-lead">"Turning data into meaningful insights and better business decisions."<br><br>I am a third-year BCA student focused on Data Analytics, Business Intelligence, database management, and data visualization. I am passionate about engineering clean reporting systems that uncover actionable metrics and discover data-driven adjustments to improve overall business performance and profitability.</p>
                     <div class="hero-actions" id="hero-actions-container">
-                        <a href="#projects" class="btn btn-primary" id="btn-view-projects" aria-label="Scroll down to view my projects">View Case Studies</a>
-                        <a href="#contact" class="btn btn-secondary" id="btn-contact-me" aria-label="Scroll down to contact me">Get In Touch</a>
+                        <a href="#projects" class="btn btn-primary" id="btn-view-projects" aria-label="Scroll down to view my projects">View Projects</a>
+                        <a href="#resume" class="btn btn-secondary" id="btn-view-resume-hero" aria-label="Scroll down to view resume">View Resume</a>
                     </div>
                 </div>
-                <div class="hero-viz-col">
-                    <!-- Abstract Data Field Canvas -->
-                    <canvas id="hero-viz-canvas"></canvas>
+                <div class="hero-portrait-col">
+                    <!-- Cinematic Profile portrait composition wrapper -->
+                    <div class="portrait-frame-container" id="hero-portrait-frame">
+                        <div class="portrait-image-wrapper">
+                            <img class="portrait-image" id="hero-portrait-image" src="assets/profile.webp" alt="AMALMON K H Professional Portrait" loading="eager">
+                        </div>
+                        <div class="portrait-vignette"></div>
+                        <div class="portrait-grain"></div>
+                        <div class="portrait-spotlight" id="portrait-spotlight-layer"></div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- About Me Section (Editorial Split) -->
+        <!-- 02 — ABOUT SECTION -->
         <section class="scroll-reveal" id="about" aria-label="About Me">
             <div class="section-title-wrapper">
-                <h2 class="section-title">About Me</h2>
+                <h2 class="section-title">About</h2>
             </div>
             <div class="about-split">
                 <div class="about-statement">
-                    "Data is useful when it leads to better decisions."
+                    "Data becomes valuable when it leads to better decisions."
                 </div>
                 <div class="about-text-content">
-                    <p>I am a third-year Bachelor of Computer Applications (BCA) student at <span class="text-highlight">Kristu Jyoti College of Management &amp; Technology</span>, affiliated with MG University, Kerala. My academic path is backed by specialized learning in quantitative analytics, data cleansing, and reporting.</p>
-                    <p>With hands-on experience in structuring transactional database schemas, formulating complex SQL query statements, and aggregating raw datasets, I help bridge the gap between back-end infrastructure and business-facing summaries. I am eager to apply these technical foundations to entry-level analyst opportunities where I can support decision-making pipelines.</p>
+                    <p>I am a third-year Bachelor of Computer Applications (BCA) student at <span class="text-highlight">Kristu Jyoti College of Management &amp; Technology</span>, affiliated with Mahatma Gandhi University, Kottayam, Kerala.</p>
+                    <p>My interests lie at the intersection of business systems and data processing. I have focused my development on structural data cleansing, database query writing in MySQL, and visual dashboard configuration. I enjoy exploring transactional sets of information to locate operational performance improvements.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Education Section -->
+        <!-- 03 — EDUCATION SECTION -->
         <section class="scroll-reveal" id="education" aria-label="Education History">
             <div class="section-title-wrapper">
                 <h2 class="section-title">Education</h2>
@@ -233,13 +241,13 @@
                     <div class="timeline-content">
                         <h3 class="timeline-institution">Kristu Jyoti College of Management &amp; Technology</h3>
                         <p class="timeline-title">Bachelor of Computer Applications (BCA)</p>
-                        <p class="timeline-desc">Academic focus on relational databases, structural programming, computer networks, and statistical analysis, while building practical dashboard development and SQL capabilities.</p>
+                        <p class="timeline-desc">Currently pursuing &mdash; 3rd Year. Academic study in computer applications, database schemas, scripting languages, and visual reporting structures.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Experience Section -->
+        <!-- 04 — EXPERIENCE SECTION -->
         <section class="scroll-reveal" id="experience" aria-label="Internship Experience">
             <div class="section-title-wrapper">
                 <h2 class="section-title">Experience</h2>
@@ -252,13 +260,12 @@
                     </div>
                     <div class="timeline-content">
                         <h3 class="timeline-company">IPSR Solutions Limited</h3>
-                        <p class="timeline-title">Data Analyst Intern</p>
+                        <p class="timeline-title">Data Analytics Internship</p>
                         <ul class="timeline-bullets">
-                            <li>Engineered automated data cleaning routines in Microsoft Excel and Power Query to cleanse and structure 15,000+ raw records, resolving 98% of formatting inconsistencies and null entries.</li>
-                            <li>Designed 5+ interactive business KPI dashboards in Power BI and Excel, improving manager review cycles and dashboard internal adoption rates.</li>
-                            <li>Applied trend analysis and statistical aggregations to transactional datasets to extract insights on sales performance and identify opportunities to optimize resource allocation.</li>
-                            <li>Formulated optimized SQL query scripts (relational joins, subqueries, and grouping logic) in MySQL to run analytics tasks against 50,000+ records, reducing query execution latency.</li>
-                            <li>Participated in stakeholder reviews and cross-functional meetings, translating analytical results into clean reporting slide decks.</li>
+                            <li>Cleaned and structured transactional database files using Microsoft Excel and Power Query to resolve formatting gaps.</li>
+                            <li>Designed dashboard reporting templates in Power BI to track essential business operational insights.</li>
+                            <li>Assisted in building custom database reports using structured SQL tables.</li>
+                            <li>Summarized analysis findings in documentation slides for internal review sessions.</li>
                         </ul>
                         <div class="timeline-actions">
                             <a href="certificates/Data%20Analytics%20and%20Visualisaton%20Internship%20Certificate%20-%208%20Weeks.pdf" 
@@ -272,7 +279,7 @@
             </div>
         </section>
 
-        <!-- Interactive Skills Section -->
+        <!-- 05 — SKILLS SECTION -->
         <section class="scroll-reveal" id="skills" aria-label="Technical Skills">
             <div class="section-title-wrapper">
                 <h2 class="section-title">Skills</h2>
@@ -305,19 +312,17 @@
                         </div>
                     </div>
                     <div class="skills-cat-block">
-                        <h3 class="skills-cat-title">Professional Qualities</h3>
+                        <h3 class="skills-cat-title">Soft Skills</h3>
                         <div class="skills-nodes-wrap">
                             <span class="skill-node" data-skill="analytical">Analytical Thinking</span>
-                            <span class="skill-node" data-skill="business">Business-minded Approach</span>
-                            <span class="skill-node" data-skill="storytelling">Data Storytelling</span>
-                            <span class="skill-node" data-skill="problemsolving">Problem-Solving</span>
+                            <span class="skill-node" data-skill="business">Business-minded</span>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Projects Showcase Section -->
+        <!-- 06 — PROJECTS SECTION -->
         <section class="scroll-reveal" id="projects" aria-label="Case Study Projects">
             <div class="section-title-wrapper">
                 <h2 class="section-title">Projects</h2>
@@ -335,13 +340,12 @@
                         <div class="project-tools">
                             <span class="project-tool-tag">Excel</span>
                             <span class="project-tool-tag">Power BI</span>
-                            <span class="project-tool-tag">Power Query</span>
+                            <span class="project-tool-tag">Data Cleaning</span>
+                            <span class="project-tool-tag">Data Visualization</span>
                         </div>
                         <div class="project-case-details">
-                            <p><span class="project-section-title">Overview:</span> A visual analytics project that ingested raw content catalogs to uncover distribution trends, regional target markets, and platform library structures.</p>
-                            <p><span class="project-section-title">Problem:</span> Messy regional text metadata, unstructured genre fields, and missing variables across a raw catalog of 10,000+ shows.</p>
-                            <p><span class="project-section-title">Analysis &amp; Insights:</span> Constructed clean mapping tables in Power Query, parsing nested classifications. Identified 3 core regional content gaps and analyzed distribution ratios of movies vs television series.</p>
-                            <p class="project-outcome-highlight">Outcome: Deployed an interactive multi-page dashboard featuring country and year filters, enabling simulated licensing reviews.</p>
+                            <p><span class="project-section-title">Overview:</span> Cleaned and visualised content metadata to uncover regional catalogue breakdowns, movie vs TV show ratios, ratings distributions, and historical release trends.</p>
+                            <p><span class="project-section-title">Outcome:</span> Built an interactive dashboard featuring dynamic slices, allowing quick slicing of content types and country markets.</p>
                         </div>
                         <div class="project-actions">
                             <a href="https://github.com/KH247-u" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="View Netflix project repository">
@@ -358,17 +362,15 @@
                     </div>
                     <div class="project-meta-wrap">
                         <span class="project-num">Project 02</span>
-                        <h3 class="project-name">Restaurant Sales Analysis Dashboard</h3>
+                        <h3 class="project-name">Restaurant Sales Analysis</h3>
                         <div class="project-tools">
                             <span class="project-tool-tag">Excel</span>
                             <span class="project-tool-tag">Power BI</span>
                             <span class="project-tool-tag">Data Modeling</span>
                         </div>
                         <div class="project-case-details">
-                            <p><span class="project-section-title">Overview:</span> A sales intelligence study analyzing 5,000+ transactional records to map revenue, demand peaks, and product configurations.</p>
-                            <p><span class="project-section-title">Problem:</span> Exposing temporal demand shifts and high-volume order intersections that affect kitchen staffing and menu structure.</p>
-                            <p><span class="project-section-title">Analysis &amp; Insights:</span> Aggregated sales data to isolate peak hourly workloads (e.g., breakfast demand at 9 AM - 11 AM, dinner at 7 PM - 9 PM) and modeled average ticket values relative to combo purchases.</p>
-                            <p class="project-outcome-highlight">Outcome: Delivered KPI metrics illustrating target areas for workforce scheduling adjustments and high-margin product packaging.</p>
+                            <p><span class="project-section-title">Overview:</span> Ingested order log lists to map daily revenue peaks, combo purchases, and product demand distributions.</p>
+                            <p><span class="project-section-title">Outcome:</span> Provided visualizations identifying opportunities to adjust staffing coordinates during hourly rushes and package high-margin products.</p>
                         </div>
                         <div class="project-actions">
                             <a href="https://github.com/KH247-u" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="View Restaurant project repository">
@@ -378,7 +380,7 @@
                     </div>
                 </article>
 
-                <!-- Project 3 (Upcoming Placeholder) -->
+                <!-- Project 3 -->
                 <article class="project-case-study upcoming-placeholder" id="project-upcoming">
                     <div class="upcoming-visual-wrap">
                         <svg class="upcoming-visual-icon icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -388,18 +390,17 @@
                             <line x1="3" y1="9" x2="21" y2="9" />
                             <line x1="3" y1="15" x2="21" y2="15" />
                         </svg>
-                        <span class="project-tool-tag">Upcoming Concept</span>
+                        <span class="project-tool-tag">Future Concept</span>
                     </div>
                     <div class="project-meta-wrap">
                         <span class="project-num">Project 03</span>
-                        <h3 class="project-name">SQL Performance Analysis &amp; RFM Segmenter</h3>
+                        <h3 class="project-name">Automated Log Indexer &amp; Query Diagnostic Engine</h3>
                         <div class="project-tools">
-                            <span class="project-tool-tag">MySQL</span>
-                            <span class="project-tool-tag">RFM Modeling</span>
-                            <span class="project-tool-tag">Cohorts</span>
+                            <span class="project-tool-tag">SQL</span>
+                            <span class="project-tool-tag">Diagnostics</span>
                         </div>
                         <div class="project-case-details">
-                            <p><span class="project-section-title">Concept:</span> Planning a MySQL clickstream log ingestion pipeline to perform database indexing diagnostics, query run-time profiling, and RFM (Recency, Frequency, Monetary) behavioral segments.</p>
+                            <p><span class="project-section-title">Concept:</span> Planning a local diagnostic database to track web query speeds, indexing latencies, and transaction locks.</p>
                         </div>
                     </div>
                 </article>
@@ -407,18 +408,18 @@
             </div>
         </section>
 
-        <!-- Certifications split gallery section -->
-        <section class="scroll-reveal" id="certifications" aria-label="Certifications Showcase">
+        <!-- 07 — CERTIFICATIONS SECTION -->
+        <section class="scroll-reveal" id="certifications" aria-label="Certifications Archive">
             <div class="section-title-wrapper">
                 <h2 class="section-title">Certifications</h2>
             </div>
             <div class="certifications-split-layout">
                 
-                <!-- Left: Big Preview card -->
+                <!-- Left: Certificate preview card -->
                 <div class="cert-preview-card" id="cert-preview-card">
                     <div class="cert-preview-glow" id="cert-preview-glow"></div>
                     <div class="cert-preview-badge" id="cert-preview-badge">
-                        <!-- Icon loaded via JS -->
+                        <!-- Loaded dynamically via JS -->
                     </div>
                     <span class="cert-preview-tag" id="cert-preview-tag">Featured Experience</span>
                     <h3 class="cert-preview-title" id="cert-preview-title">Data Analytics &amp; Visualisation Internship</h3>
@@ -438,7 +439,7 @@
                 <!-- Right: Scrollable list of items -->
                 <div class="cert-list-col" id="cert-list-col">
                     
-                    <!-- Cert 1 (Featured) -->
+                    <!-- Cert 1 (IPSR Internship) -->
                     <button class="cert-item-row active" data-index="0" aria-label="View IPSR Internship certificate details">
                         <div class="cert-item-top">
                             <span class="cert-item-title">Data Analytics &amp; Visualisation</span>
@@ -447,7 +448,7 @@
                         <span class="cert-item-issuer">IPSR Solutions Limited</span>
                     </button>
 
-                    <!-- Cert 2 -->
+                    <!-- Cert 2 (Cloud computing) -->
                     <button class="cert-item-row" data-index="1" aria-label="View Cloud Computing certificate details">
                         <div class="cert-item-top">
                             <span class="cert-item-title">Cloud Computing</span>
@@ -456,7 +457,7 @@
                         <span class="cert-item-issuer">Alpha Innovation (AWS Platforms)</span>
                     </button>
 
-                    <!-- Cert 3 -->
+                    <!-- Cert 3 (Database and SQL) -->
                     <button class="cert-item-row" data-index="2" aria-label="View Database and SQL certificate details">
                         <div class="cert-item-top">
                             <span class="cert-item-title">Database and SQL</span>
@@ -465,7 +466,7 @@
                         <span class="cert-item-issuer">Infosys Springboard</span>
                     </button>
 
-                    <!-- Cert 4 -->
+                    <!-- Cert 4 (Web Dev) -->
                     <button class="cert-item-row" data-index="3" aria-label="View Web Development certificate details">
                         <div class="cert-item-top">
                             <span class="cert-item-title">5-Day Web Development</span>
@@ -474,7 +475,7 @@
                         <span class="cert-item-issuer">&mu;Learn IDK / INOVUS LABS IEDC</span>
                     </button>
 
-                    <!-- Cert 5 -->
+                    <!-- Cert 5 (OpenShift AI) -->
                     <button class="cert-item-row" data-index="4" aria-label="View OpenShift AI certificate details">
                         <div class="cert-item-top">
                             <span class="cert-item-title">OpenShift AI for Future Careers</span>
@@ -483,7 +484,7 @@
                         <span class="cert-item-issuer">Red Hat / IPSR Solutions Limited</span>
                     </button>
 
-                    <!-- Cert 6 -->
+                    <!-- Cert 6 (YIP) -->
                     <button class="cert-item-row" data-index="5" aria-label="View YIP 8.0 certificate details">
                         <div class="cert-item-top">
                             <span class="cert-item-title">Young Innovators Programme 8.0</span>
@@ -497,17 +498,129 @@
             </div>
         </section>
 
-        <!-- Career Direction full card -->
-        <section class="section-card-full scroll-reveal" id="career-direction" aria-label="Career Objective Summary">
-            <h2 class="section-title" style="margin-bottom: 2rem; justify-content: center;">Objective</h2>
-            <div class="career-statement">
-                "I aim to leverage quantitative analytics, clean database modeling, and interactive reporting to discover operational improvements that increase business performance and profitability."
+        <!-- 08 — RESUME SECTION (A4 MAXIMUM ONE PAGE) -->
+        <section class="scroll-reveal" id="resume" aria-label="Professional Resume">
+            <div class="section-title-wrapper">
+                <h2 class="section-title">Resume</h2>
+            </div>
+            <div class="resume-section-wrapper">
+                <!-- Physical A4 sheet simulation on screens -->
+                <div class="resume-sheet" id="resume-sheet-printable">
+                    
+                    <!-- Header -->
+                    <div class="resume-header">
+                        <h3 class="resume-header-name">AMALMON K H</h3>
+                        <p class="resume-header-tagline">BCA Student | Data Analytics Enthusiast</p>
+                        <div class="resume-header-meta">
+                            <span>Kottayam, Kerala, India</span>
+                            <a href="mailto:amalmonkh@gmail.com">amalmonkh@gmail.com</a>
+                            <a href="https://github.com/KH247-u" target="_blank" rel="noopener noreferrer">GitHub</a>
+                            <a href="https://www.linkedin.com/in/Amalmon-KH" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        </div>
+                    </div>
+
+                    <!-- Body content -->
+                    <div class="resume-body">
+                        
+                        <!-- Profile -->
+                        <div class="resume-row-split">
+                            <h4 class="resume-sec-title">Profile</h4>
+                            <p class="resume-profile-text">Third-year computer applications student with development focused on data analysis, business intelligence dashboards, and structured database querying. Experienced in data cleansing, dashboard composition, and translating numbers into clear summaries.</p>
+                        </div>
+
+                        <!-- Education -->
+                        <div class="resume-row-split">
+                            <h4 class="resume-sec-title">Education</h4>
+                            <div class="resume-edu-block">
+                                <div class="resume-edu-meta">
+                                    <span class="resume-edu-inst">Kristu Jyoti College of Management &amp; Tech</span>
+                                    <span class="resume-edu-date">Expected 2028</span>
+                                </div>
+                                <p class="resume-edu-degree">Bachelor of Computer Applications (BCA)</p>
+                                <p class="resume-profile-text">Mahatma Gandhi University, Kottayam, Kerala</p>
+                            </div>
+                        </div>
+
+                        <!-- Experience -->
+                        <div class="resume-row-split">
+                            <h4 class="resume-sec-title">Experience</h4>
+                            <div class="resume-exp-block">
+                                <div class="resume-exp-meta">
+                                    <span class="resume-exp-comp">IPSR Solutions Limited</span>
+                                    <span class="resume-exp-date">Apr &ndash; May 2026</span>
+                                </div>
+                                <p class="resume-exp-title">Data Analytics Intern</p>
+                                <ul class="resume-bullets-list">
+                                    <li>Cleaned and structured transactional database files using Excel and Power Query.</li>
+                                    <li>Designed visual reporting templates and KPI dashboards in Power BI.</li>
+                                    <li>Assisted in writing custom relational database SQL select queries.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Skills -->
+                        <div class="resume-row-split">
+                            <h4 class="resume-sec-title">Skills</h4>
+                            <div class="resume-skills-grid">
+                                <span class="resume-skill-pill">Excel</span>
+                                <span class="resume-skill-pill">Power BI</span>
+                                <span class="resume-skill-pill">SQL</span>
+                                <span class="resume-skill-pill">MySQL</span>
+                                <span class="resume-skill-pill">Tableau</span>
+                                <span class="resume-skill-pill">DAX</span>
+                                <span class="resume-skill-pill">Power Query</span>
+                                <span class="resume-skill-pill">C</span>
+                                <span class="resume-skill-pill">C++</span>
+                                <span class="resume-skill-pill">Java</span>
+                                <span class="resume-skill-pill">HTML</span>
+                                <span class="resume-skill-pill">CSS</span>
+                                <span class="resume-skill-pill">JavaScript</span>
+                            </div>
+                        </div>
+
+                        <!-- Projects -->
+                        <div class="resume-row-split">
+                            <h4 class="resume-sec-title">Projects</h4>
+                            <div>
+                                <div class="resume-project-item">
+                                    <p class="resume-project-name">Netflix Data Analytics Dashboard</p>
+                                    <p class="resume-profile-text">Cleaned raw content datasets using Power Query and constructed structured dashboards outlining movies vs TV show ratios and regional distributions.</p>
+                                </div>
+                                <div class="resume-project-item">
+                                    <p class="resume-project-name">Restaurant Sales Analysis Dashboard</p>
+                                    <p class="resume-profile-text">Modeled order logs in Power BI to outline daily demand peaks and recommend combi menu configurations.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Certifications -->
+                        <div class="resume-row-split">
+                            <h4 class="resume-sec-title">Certifications</h4>
+                            <div class="resume-certifications-wrap">
+                                <div class="resume-cert-item">
+                                    <span class="resume-cert-title">Data Analytics Internship</span><br>
+                                    <span class="resume-cert-issuer">IPSR Solutions Limited</span>
+                                </div>
+                                <div class="resume-cert-item">
+                                    <span class="resume-cert-title">Database &amp; SQL</span><br>
+                                    <span class="resume-cert-issuer">Infosys Springboard</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Download button wrapper -->
+                <div class="resume-sheet-actions">
+                    <button class="btn btn-primary" id="btn-download-resume" aria-label="Download resume as PDF">Download Resume</button>
+                </div>
             </div>
         </section>
 
-        <!-- Contact Segment -->
+        <!-- 09 — CONTACT SECTION -->
         <section class="section-contact scroll-reveal" id="contact" aria-label="Contact Details">
-            <h2 class="contact-title">Let's build something meaningful with data.</h2>
+            <h2 class="contact-title">Let's turn data into better decisions.</h2>
             <div class="contact-links-grid">
                 <a href="mailto:amalmonkh@gmail.com" class="contact-link-item" aria-label="Send email to amalmonkh@gmail.com">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

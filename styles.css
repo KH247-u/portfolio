@@ -373,7 +373,6 @@ a, button {
 
 .profile-photo-container:hover .profile-photo-wrapper {
     border-color: var(--accent);
-    box-shadow: 0 25px 50px rgba(255, 106, 0, 0.15);
 }
 
 .profile-photo-container:hover .profile-photo-accent-ring {
@@ -587,7 +586,7 @@ a, button {
 }
 
 .project-card:hover .project-img {
-    transform: scale(1.04);
+    transform: scale(1.03);
     filter: grayscale(0%);
 }
 
@@ -640,7 +639,7 @@ a, button {
 
 .project-card:hover .project-title {
     color: var(--accent);
-    transform: translateX(10px);
+    transform: translateX(6px);
 }
 
 .project-details {
@@ -678,14 +677,30 @@ a, button {
     font-size: 0.85rem;
     letter-spacing: 0.05em;
     color: var(--text-primary);
-    border-bottom: 1px solid var(--accent);
-    padding-bottom: 2px;
-    transition: var(--transition-fast);
+    position: relative;
+    padding-bottom: 4px;
+    transition: color var(--transition-fast);
+}
+
+.project-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background-color: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s var(--ease-editorial);
 }
 
 .project-link:hover {
     color: var(--accent);
-    border-bottom-color: var(--text-primary);
+}
+
+.project-link:hover::after {
+    transform: scaleX(1);
 }
 
 /* Certifications Section */
@@ -713,7 +728,7 @@ a, button {
     flex-direction: column;
     padding: 1.5rem 0;
     border-bottom: 1px solid var(--border);
-    transition: padding-left var(--transition-fast);
+    transition: padding-left 0.4s var(--ease-editorial), opacity 0.4s var(--ease-editorial), border-color 0.4s var(--ease-editorial) !important;
 }
 
 .cert-item.active {
@@ -886,12 +901,13 @@ a, button {
 }
 
 .btn-arrow {
+    display: inline-block;
     font-size: 1.2rem;
-    transition: transform var(--transition-fast);
+    transition: transform 0.4s var(--ease-editorial);
 }
 
 .resume-download-btn:hover .btn-arrow {
-    transform: translateY(3px);
+    transform: rotate(-135deg) translate(1px, -1px);
 }
 
 /* Contact Section */
@@ -1154,4 +1170,126 @@ a, button {
         width: 180px;
         height: 180px;
     }
+}
+
+/* ==========================================================================
+   PREMIUM MOTION & INTERACTION ADDITIONS
+   ========================================================================== */
+
+/* Prevent FOUC for page-load animations */
+.js-enabled .hero-identity,
+.js-enabled .hero-name-layer,
+.js-enabled .profile-photo-container,
+.js-enabled .hero-statement,
+.js-enabled .scroll-indicator {
+    opacity: 0;
+}
+
+/* Header scrolled state */
+.main-header.scrolled {
+    padding: 0.9rem 4%;
+    background: rgba(5, 5, 5, 0.85);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Section divider lines */
+.js-enabled .about-section,
+.js-enabled .timeline-section,
+.js-enabled .projects-section,
+.js-enabled .certifications-section,
+.js-enabled .resume-section,
+.js-enabled .contact-section {
+    border-top: none;
+    position: relative;
+}
+
+.section-divider {
+    position: absolute;
+    top: 0;
+    left: 6%;
+    right: 6%;
+    height: 1px;
+    background-color: var(--border);
+    transform-origin: left;
+    transform: scaleX(0);
+    z-index: 10;
+}
+
+@media (max-width: 768px) {
+    .section-divider {
+        left: 5%;
+        right: 5%;
+    }
+}
+
+/* Project image hover overlay */
+.project-image-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(5, 5, 5, 0), rgba(5, 5, 5, 0.25));
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s var(--ease-editorial);
+    z-index: 1;
+}
+
+.project-card:hover .project-image-wrapper::after {
+    opacity: 1;
+}
+
+/* Contact link underline animation */
+.contact-value {
+    position: relative;
+    display: inline-block;
+}
+
+.contact-value::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background-color: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease-editorial);
+}
+
+.contact-card:hover .contact-value::after {
+    transform: scaleX(1);
+}
+
+/* Link Arrow animation */
+.link-arrow {
+    display: inline-block;
+    transition: transform 0.3s var(--ease-editorial);
+}
+
+.project-link:hover .link-arrow {
+    transform: translate(3px, -3px);
+}
+
+.contact-card:hover .link-arrow {
+    transform: translateX(4px);
+}
+
+/* Cert list surroundings fade */
+.cert-list:hover .cert-item:not(:hover) {
+    opacity: 0.4;
+}
+
+/* Profile Photo shadow enhancements */
+.profile-photo-wrapper {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    transition: border-color var(--transition-fast), box-shadow 0.4s var(--ease-editorial);
+}
+
+.profile-photo-container:hover .profile-photo-wrapper {
+    border-color: var(--accent);
+    box-shadow: 0 25px 50px rgba(255, 106, 0, 0.22);
 }
